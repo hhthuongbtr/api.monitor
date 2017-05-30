@@ -3,7 +3,7 @@
 cat /tmp/log_file.sql > /tmp/inprocess.sql
 cat /dev/null > /tmp/log_file.sql
 sleep 1
-mysql -uMonitorAgent -p11nit0rA93nt monitor -h x.x.x.x < /tmp/inprocess.sql
+mysql -u<user> -p<passwd> monitor -h x.x.x.x < /tmp/inprocess.sql
 
 #crontab
 * * * * * /script/sql_update.sh
