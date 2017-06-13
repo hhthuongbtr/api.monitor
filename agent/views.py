@@ -7,6 +7,7 @@ from rest_framework import status
 import json
 
 from setting.customSQL import *
+from setting.rabbitmq_queue import *
 
 
 #######################################################################
@@ -45,12 +46,10 @@ class AgentDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, ip, format=None):
-        agent = self.get_object(ip)
-        serializer = AgentSerializer(agent, data=request.data)
         data = request.data
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
             querry = "update agent set cpu=%s,mem=%s,disk=%s,last_update=unix_timestamp() where ip='%s';"%(data['cpu'],data['mem'],data['disk'],ip)
-            File().write(querry)
+            RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -102,27 +101,27 @@ class ProfileAgentDetail(APIView):
         #Status
         if ('status' in data) and len(data)==1:
             querry="update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
-            File().write(querry)
+            RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_202_ACCEPTED)
         #video
         elif ('video' in data) and len(data)==1:
             querry="update profile_agent set video=%s,last_update=unix_timestamp() where id=%s;"%(data['video'],pk)
-            File().write(querry)
+            RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_202_ACCEPTED)
         #dropframe
         elif ('dropframe' in data) and len(data)==1:
             querry="update profile_agent set dropframe=%s,last_update=unix_timestamp() where id=%s;"%(data['dropframe'],pk)
-            File().write(querry)
+            RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_202_ACCEPTED)
         #discontinuity
         elif ('discontinuity' in data) and len(data)==1:
             querry="update profile_agent set discontinuity=%s,last_update=unix_timestamp() where id=%s;"%(data['discontinuity'],pk)
-            File().write(querry)
+            RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_202_ACCEPTED)
         #analyzer_status
         elif ('analyzer_status' in data) and len(data)==1:
             querry="update profile_agent set analyzer_status=%s,last_update=unix_timestamp() where id=%s;"%(data['analyzer_status'],pk)
-            File().write(querry)
+            RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
