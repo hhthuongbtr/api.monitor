@@ -164,8 +164,9 @@ def get_profile_agent_analyzer(request):
                     })
     json_data = json.dumps({"profile_analyzer": args})
     return HttpResponse(json_data, content_type='application/json', status=200)
+
 def get_profile_agent_analyzer_check(request):
-    cmd="select pa.id,p.ip,a.ip,pa.analyzer_status,pa.dropframe,pa.dropframe_threshold,pa.discontinuity,pa.discontinuity_threshold from profile_agent as pa, profile as p, agent as a where (pa.dropframe > 0 or pa.discontinuity > 0) and a.active=1 and pa.analyzer=1 and pa.profile_id=p.id and pa.agent_id=a.id"
+    cmd="select pa.id,p.ip,a.ip,pa.analyzer_status,pa.dropframe,pa.dropframe_threshold,pa.discontinuity,pa.discontinuity_threshold from profile_agent as pa, profile as p, agent as a where (pa.dropframe > 0 or pa.discontinuity > 0 or analyzer_status !=1) and a.active=1 and pa.analyzer=1 and pa.profile_id=p.id and pa.agent_id=a.id"
     profile_agent_list = my_custom_sql(cmd)
     if len(profile_agent_list) <1:
         return HttpResponse({"detail": "Not found."}, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
