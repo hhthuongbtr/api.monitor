@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'channel',
     'agent',
     'log',
+    'event',
 ]
 
 MIDDLEWARE = [
@@ -67,12 +68,12 @@ WSGI_APPLICATION = 'setting.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'monitor',
-	'USER': 'api',
-	'PASSWORD': 'monitorApi@$@',
-	'HOST': '118.69.166.134',
-	'PORT': '3306',
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'monitor',
+    'USER': 'root',
+    'PASSWORD': 'root',
+    'HOST': 'localhost',
+    'PORT': '3306',
     }
 }
 

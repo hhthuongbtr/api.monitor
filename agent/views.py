@@ -1,13 +1,12 @@
 from agent.models import *
-from agent.serializers import *
 from django.http import Http404, HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import json
-
 from setting.customSQL import *
 from setting.rabbitmq_queue import *
+from django.core.exceptions import ObjectDoesNotExist
 
 
 #######################################################################
@@ -20,45 +19,85 @@ class AgentList(APIView):
     List all Agents, or create a new agent.
     """
     def get(self, request, format=None):
-        agent = Agent.objects.all()
-        serializer = AgentSerializer(agent, many=True)
-        return Response(serializer.data)
+        args = {}
+        try:
+            agent_list = Agent.objects.all()
+        except Exception as e:
+            args["detail"] = e
+        if agent_list:
+            args_agent=[]
+            for agent in agent_list:
+                args_agent.append({ 
+                    "id"            : int(agent.id),
+                    "name"          : agent.name,
+                    "ip"            : agent.ip,
+                    "descr"         : agent.descr,
+                    "thread"        : int(agent.thread),
+                    "cpu"           : int(agent.cpu),
+                    "mem"           : int(agent.mem),
+                    "disk"          : int(agent.disk),
+                    "last_update"   : int(agent.last_update),
+                    "active"        : int(agent.active),
+                    "lng"           : agent.lng,
+                    "lat"           : agent.lat
+                    })
+            args["detail"] = "OK"
+            args["agent_list"] = args_agent
+        else:
+            args["detail"] = "Empty"
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        serializer = AgentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
 class AgentDetail(APIView):
     """
     Retrieve, update or delete a agent instance.
     """
     def get_object(self, ip):
         try:
-            return Agent.objects.get(ip=ip)
-        except Agent.DoesNotExist:
-            return HttpResponse({detail: "Not found."}, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+            agent = Agent.objects.get(ip=ip)
+        except ObjectDoesNotExist:
+            agent = None
+        return agent
 
     def get(self, request, ip, format=None):
+        args = {}
         agent = self.get_object(ip)
-        serializer = AgentSerializer(agent)
-        return Response(serializer.data)
+        if agent:
+            args_agent = []
+            args_agent.append({
+                "id"            : int(agent.id),
+                "name"          : agent.name,
+                "ip"            : agent.ip,
+                "descr"         : agent.descr,
+                "thread"        : int(agent.thread),
+                "cpu"           : int(agent.cpu),
+                "mem"           : int(agent.mem),
+                "disk"          : int(agent.disk),
+                "last_update"   : int(agent.last_update),
+                "active"        : int(agent.active),
+                "lng"           : agent.lng,
+                "lat"           : agent.lat
+                })
+            args["detail"] = 'OK'
+            args['agent'] = args_agent
+        else:
+            args["detail"] = 'Not found.'
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     def put(self, request, ip, format=None):
         data = request.data
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
             querry = "update agent set cpu=%s,mem=%s,disk=%s,last_update=unix_timestamp() where ip='%s';"%(data['cpu'],data['mem'],data['disk'],ip)
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_202_ACCEPTED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=status.HTTP_202_ACCEPTED)
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, ip, format=None):
-        agent = self.get_object(ip)
-        agent.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 #######################################################################
 #                                                                     #
@@ -71,30 +110,80 @@ class ProfileAgentList(APIView):
     List all profile_agents, or create a new profilie_agent.
     """
     def get(self, request, format=None):
-        profileAgent = ProfileAgent.objects.all()
-        serializer = ProfileAgentSerializer(profileAgent, many=True)
-        return Response(serializer.data)
+        args = {}
+        try:
+            profile_agent_list = ProfileAgent.objects.all()
+        except Exception as e:
+            args["detail"] = e
+        if profile_agent_list:
+            args_profile_agent=[]
+            for profile_agent in profile_agent_list:
+                args_profile_agent.append({ 
+                    'id'                        : int(profile_agent.id),
+                    'profile_id'                : int(profile_agent.profile_id),
+                    'agent_id'                  : int(profile_agent.agent_id),
+                    'status'                    : int(profile_agent.status),
+                    'analyzer_status'           : int(profile_agent.analyzer_status),
+                    'dropframe'                 : int(profile_agent.dropframe),
+                    'dropframe_threshold'       : int(profile_agent.dropframe_threshold),
+                    'discontinuity'             : int(profile_agent.discontinuity),
+                    'discontinuity_threshold'   : int(profile_agent.discontinuity_threshold),
+                    'check'                     : int(profile_agent.check),
+                    'video'                     : int(profile_agent.video),
+                    'audio'                     : int(profile_agent.audio),
+                    'monitor'                   : int(profile_agent.monitor),
+                    'analyzer'                  : int(profile_agent.analyzer),
+                    'last_update'               : int(profile_agent.last_update)
+                    })
+            args["detail"] = "OK"
+            args["profile_agent_list"] = args_profile_agent
+        else:
+            args["detail"] = "Empty"
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        serializer = ProfileAgentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ProfileAgentDetail(APIView):
     """
     Retrieve, update or delete a profile_agent instance.
     """
     def get_object(self, pk):
         try:
-            return ProfileAgent.objects.get(pk=pk)
-        except ProfileAgent.DoesNotExist:
-            return HttpResponse({"detail": "Not found."}, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+            profile_agent = ProfileAgent.objects.get(id = pk)
+        except ObjectDoesNotExist:
+            profile_agent = None
+        return profile_agent
 
     def get(self, request, pk, format=None):
-        profileAgent = self.get_object(pk)
-        serializer = ProfileAgentSerializer(profileAgent)
-        return Response(serializer.data)
+        args = {}
+        profile_agent = self.get_object(pk)
+        if profile_agent:
+            args_profile_agent = []
+            args_profile_agent.append({
+                'id'                        : int(profile_agent.id),
+                'profile_id'                : int(profile_agent.profile_id),
+                'agent_id'                  : int(profile_agent.agent_id),
+                'status'                    : int(profile_agent.status),
+                'analyzer_status'           : int(profile_agent.analyzer_status),
+                'dropframe'                 : int(profile_agent.dropframe),
+                'dropframe_threshold'       : int(profile_agent.dropframe_threshold),
+                'discontinuity'             : int(profile_agent.discontinuity),
+                'discontinuity_threshold'   : int(profile_agent.discontinuity_threshold),
+                'check'                     : int(profile_agent.check),
+                'video'                     : int(profile_agent.video),
+                'audio'                     : int(profile_agent.audio),
+                'monitor'                   : int(profile_agent.monitor),
+                'analyzer'                  : int(profile_agent.analyzer),
+                'last_update'               : int(profile_agent.last_update)
+                })
+            args["detail"] = 'OK'
+            args['profile_agent'] = args_profile_agent
+        else:
+            args["detail"] = 'Not found.'
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     def put(self, request, pk, format=None):
         data=request.data
@@ -135,7 +224,10 @@ def get_profile_agent_by_agent_ip(request, ip):
     cmd="select pa.id,p.ip,p.protocol,pa.status,a.thread,c.name,p.type from profile as p, agent as a, profile_agent as pa,channel as c where a.ip='%s' and a.active=1 and pa.monitor=1 and p.channel_id=c.id and pa.profile_id=p.id and pa.agent_id=a.id"%(ip)
     profile_agent_list = my_custom_sql(cmd)
     if len(profile_agent_list) <1:
-        return HttpResponse(json.dumps({"detail": "Not found."}), content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        args = []
+        args["detail"] = 'Not found.'
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'          : i[0] if i[0] else None,
@@ -153,7 +245,10 @@ def get_profile_agent_analyzer(request):
     cmd="select pa.id,p.ip,a.ip,dropframe,discontinuity from profile_agent as pa, profile as p, agent as a where pa.analyzer=1 and a.active=1 and pa.profile_id=p.id and pa.agent_id=a.id"
     profile_agent_list = my_custom_sql(cmd)
     if len(profile_agent_list) <1:
-        return HttpResponse(json.dumps({"detail": "Not found."}), content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        args = []
+        args["detail"] = 'Not found.'
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'          : i[0] if i[0] else None,
@@ -169,7 +264,10 @@ def get_profile_agent_analyzer_check(request):
     cmd="select pa.id,p.ip,a.ip,pa.analyzer_status,pa.dropframe,pa.dropframe_threshold,pa.discontinuity,pa.discontinuity_threshold from profile_agent as pa, profile as p, agent as a where (pa.dropframe > 0 or pa.discontinuity > 0 or analyzer_status !=1) and a.active=1 and pa.analyzer=1 and pa.profile_id=p.id and pa.agent_id=a.id"
     profile_agent_list = my_custom_sql(cmd)
     if len(profile_agent_list) <1:
-        return HttpResponse({"detail": "Not found."}, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        args = []
+        args["detail"] = 'Not found.'
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'                   : i[0] if i[0] else None,
@@ -188,7 +286,10 @@ def get_snmp_agent(request,ip):
     cmd="select pa.id,c.name,p.ip,p.type,pa.monitor,pa.status,pa.analyzer,pa.analyzer_status from profile as p, agent as a, profile_agent as pa,channel as c where a.ip='%s' and (pa.monitor=1 or pa.analyzer=1) and a.active=1 and p.channel_id=c.id and pa.profile_id=p.id and pa.agent_id=a.id order by c.name"%(ip)
     profile_agent_list = my_custom_sql(cmd)
     if len(profile_agent_list) <1:
-        return HttpResponse({"detail": "Not found."}, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        args = []
+        args["detail"] = 'Not found.'
+        data = json.dumps(args)
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'                   : i[0] if i[0] else None,

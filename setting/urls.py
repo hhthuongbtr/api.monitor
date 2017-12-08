@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^', include('channel.urls')),
     url(r'^', include('agent.urls')),
     url(r'^', include('log.urls')),
+    url(r'^event/', include('event.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
