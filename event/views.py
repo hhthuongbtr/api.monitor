@@ -6,6 +6,7 @@ from rest_framework import status
 import json
 from django.core.exceptions import ObjectDoesNotExist
 from setting.DateTime import DateTime
+from BLL.event import Event as EventBLL
 
 
 #######################################################################
@@ -244,29 +245,48 @@ class EventMonitorDetail(APIView):
 
     def put(self, request, pk, format=None):
         data = json.loads(request.body)
-        id = data['id']
-        event_monitor = self.get_object(id)
-        event_monitor.pid = data['pid']
-        event_monitor.event_id = data['event_id']
-        event_monitor.encoder_id = data['encoder_id']
-        event_monitor.service_check_id = data['service_check_id']
-        event_monitor.descr = data['descr']
-        event_monitor.active = data['active']
-        date_time = DateTime()
-        now = date_time.get_now()
-        event_monitor.last_update = now
-        event_monitor.save()
-        args_event_monitor = []
-        args_event_monitor.append(EventMonitor().parse_object_as_json_fortmat(event_monitor))
-        data = json.dumps(args_event_monitor)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        event_monitor = self.get_object(pk)
+        flag = False
+        #status
+        if ('status' in data):
+            event_monitor.status = data['status']
+            flag = True
+        #pid
+        if ('pid' in data):
+            event_monitor.pid = data['pid']
+            flag = True
+        if ('active' in data):
+            event_monitor.active = data['active']
+            flag = True
+        if ('service_check_id' in data):
+            event_monitor.service_check_id = data['service_check_id']
+            flag = True
+        if ('descr' in data):
+            event_monitor.descr = data['descr']
+            flag = True
+        if ('event_id' in data):
+            event_monitor.event_id = data['event_id']
+            flag = True
+        if ('encoder_id' in data):
+            event_monitor.encoder_id = data['encoder_id']
+            flag = True
+        if ('last_update' in data):
+            event_monitor.last_update = data['last_update']
+            flag = True
+        else:
+            date_time = DateTime()
+            now = date_time.get_now()
+            event_monitor.last_update = now
+        if flag:
+            event_monitor.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class MonitorList:
     def __init__(self):
-        from BLL.event import Event as EventBLL
         self.event = EventBLL()
 
     def get_monitor_list(self, request):
@@ -291,12 +311,10 @@ class MonitorList:
 
 class MonitorDetail:
     def __init__(self):
-        from BLL.event import Event as EventBLL
         self.event = EventBLL()
 
     def get_event_monitor(self, request, event_monitor_id):
         monitor = self.event.get_event_monitor(event_monitor_id)
         data = json.dumps(monitor)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
-
 
