@@ -19,8 +19,6 @@ class LogList:
     """
     @csrf_exempt
     def routing(self, request):
-        if not request.user.is_authenticated():
-            return HttpResponseRedirect('/accounts/login')
         if request.method == "GET":
             return self.get(request)
         elif request.method == "POST":
