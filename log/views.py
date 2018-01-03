@@ -1,6 +1,6 @@
 from log.models import *
 from django.http import Http404, HttpResponse
-from rest_framework.views import APIView
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
 from setting.customSQL import *
@@ -13,10 +13,20 @@ import json
 #-------------------------------AGENT---------------------------------#
 #                                                                     #
 #######################################################################
-class LogList(APIView):
+class LogList:
     """
     List all Logs, or create a new Log.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect('/accounts/login')
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
+    @csrf_exempt
     def get(self, request, format=None):
         args = {}
         try:
@@ -48,6 +58,7 @@ class LogList(APIView):
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
+    @csrf_exempt
     def post(self, request, format=None):
         data=request.data
         if len(data)==3 and ('host' and 'tag' and 'msg' in data):
@@ -55,16 +66,26 @@ class LogList(APIView):
             RabbitMQQueue().push_query(querry)
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-class LogDetail(APIView):
+
+class LogDetail:
     """
     Retrieve, update or delete a Log instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+    @csrf_exempt
     def get_object(self, pk):
         try:
             return Log.objects.get(pk=pk)
         except ObjectDoesNotExist:
             return None
-
+    @csrf_exempt
     def get(self, request, pk, format=None):
         args = {}
         log = self.get_object(pk)
@@ -92,10 +113,11 @@ class LogDetail(APIView):
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
+    @csrf_exempt
     def put(self, request, pk, format=None):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
+    @csrf_exempt
     def delete(self, request, pk, format=None):
         log = self.get_object(pk)
         log.delete()

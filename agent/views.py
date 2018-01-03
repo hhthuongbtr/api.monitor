@@ -1,6 +1,6 @@
 from agent.models import *
 from django.http import Http404, HttpResponse
-from rest_framework.views import APIView
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
 import json
@@ -14,10 +14,18 @@ from django.core.exceptions import ObjectDoesNotExist
 #-------------------------------AGENT---------------------------------#
 #                                                                     #
 #######################################################################
-class AgentList(APIView):
+class AgentList:
     """
     List all Agents, or create a new agent.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
+    @csrf_exempt
     def get(self, request, format=None):
         args = {}
         try:
@@ -47,14 +55,25 @@ class AgentList(APIView):
             args["detail"] = "Empty"
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
-
+        
+    @csrf_exempt
     def post(self, request, format=None):
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
-class AgentDetail(APIView):
+class AgentDetail:
     """
     Retrieve, update or delete a agent instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+
+    @csrf_exempt
     def get_object(self, ip):
         try:
             agent = Agent.objects.get(ip=ip)
@@ -62,6 +81,7 @@ class AgentDetail(APIView):
             agent = None
         return agent
 
+    @csrf_exempt
     def get(self, request, ip, format=None):
         args = {}
         agent = self.get_object(ip)
@@ -88,6 +108,7 @@ class AgentDetail(APIView):
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
+    @csrf_exempt
     def put(self, request, ip, format=None):
         data = request.data
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
@@ -96,6 +117,7 @@ class AgentDetail(APIView):
             return HttpResponse(status=status.HTTP_202_ACCEPTED)
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
+    @csrf_exempt
     def delete(self, request, ip, format=None):
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
@@ -105,10 +127,17 @@ class AgentDetail(APIView):
 #                                                                     #
 #######################################################################
 
-class ProfileAgentList(APIView):
+class ProfileAgentList:
     """
     List all profile_agents, or create a new profilie_agent.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
     def get(self, request, format=None):
         args = {}
         try:
@@ -145,10 +174,20 @@ class ProfileAgentList(APIView):
     def post(self, request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileAgentDetail(APIView):
+class ProfileAgentDetail:
     """
     Retrieve, update or delete a profile_agent instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+
+    @csrf_exempt
     def get_object(self, pk):
         try:
             profile_agent = ProfileAgent.objects.get(id = pk)
@@ -156,6 +195,7 @@ class ProfileAgentDetail(APIView):
             profile_agent = None
         return profile_agent
 
+    @csrf_exempt
     def get(self, request, pk, format=None):
         args = {}
         profile_agent = self.get_object(pk)
@@ -185,6 +225,7 @@ class ProfileAgentDetail(APIView):
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
+    @csrf_exempt
     def put(self, request, pk, format=None):
         data=request.data
         #Status
@@ -214,6 +255,7 @@ class ProfileAgentDetail(APIView):
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @csrf_exempt
     def delete(self, request, pk, format=None):
         profileAgent = self.get_object(pk)
         profileAgent.delete()

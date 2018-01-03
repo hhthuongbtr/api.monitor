@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-
 from django.db import models
+from setting.DateTime import DateTime
 
 class Encoder(models.Model):
     name = models.CharField(max_length=255)
@@ -20,7 +20,7 @@ class Encoder(models.Model):
                  'ip_monitor'       : encoder.ip_monitor,
                  'source_main'      : encoder.source_main,
                  'source_backup'    : encoder.source_backup,
-                 'active'           : encoder.active
+                 'active'           : True if encoder.active else False
                 }
         return args
 
@@ -39,15 +39,16 @@ class Event(models.Model):
     ordering = ('-start_date',)
 
     def parse_object_as_json_fortmat(self, event):
+        date_time = DateTime()
         args = {
                  'id'               : event.id,
                  'name'             : event.name,
                  'location'         : event.location,
                  'region'           : event.region,
-                 'start_date'       : event.start_date,
-                 'end_date'         : event.end_date,
-                 'create_date'      : event.create_date,
-                 'active'           : event.active
+                 'start_date'       : str(date_time.convert_unix_timestamp_2_human_creadeble(event.start_date)),
+                 'end_date'         : str(date_time.convert_unix_timestamp_2_human_creadeble(event.end_date)),
+                 'create_date'      : str(date_time.convert_unix_timestamp_2_human_creadeble(event.create_date)),
+                 'active'           : True if event.active else False
                 }
         return args
 
@@ -75,7 +76,7 @@ class EventMonitor(models.Model):
                 'service_check_id'  : event_monitor.service_check_id,
                 'status'            : event_monitor.status,
                 'last_update'       : event_monitor.last_update,
-                'active'            : event_monitor.active,
+                'active'            : True if event_monitor.active else False,
                 'descr'             : event_monitor.descr
                 }
         return agrs
@@ -93,6 +94,6 @@ class ServiceCheck(models.Model):
         args = {
                  'id'               : service_check.id,
                  'name'             : service_check.name,
-                 'active'           : service_check.active
+                 'active'           : True if service_check.active else False
                 }
         return args
