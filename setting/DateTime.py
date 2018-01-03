@@ -31,3 +31,7 @@ class DateTime:
 
     def get_now_as_human_creadeble(self):
         return (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
+    def convert_unix_timestamp_2_human_creadeble(self, timestamp):
+        return (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(timestamp))))
+
