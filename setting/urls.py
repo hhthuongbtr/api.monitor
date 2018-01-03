@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^', include('agent.urls')),
     url(r'^', include('log.urls')),
     url(r'^event/', include('event.urls')),
+    url(r'^scc/', include('scc.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
