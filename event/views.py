@@ -60,7 +60,7 @@ class EventList:
             flag = True
             end_date = data['end_date']
             date_time = DateTime()
-            end_date = date_time.conver_human_creadeble_2_unix_timetamp(end_date)
+            end_date = date_time.conver_human_creadeble_2_unix_timetamp_local(end_date)
         else:
             end_date = 0;
         if ('name' in data):
@@ -74,7 +74,7 @@ class EventList:
             flag = True
             start_date = data['start_date']
             date_time = DateTime()
-            start_date = date_time.conver_human_creadeble_2_unix_timetamp(start_date)
+            start_date = date_time.conver_human_creadeble_2_unix_timetamp_local(start_date)
         else:
             start_date = 0;
         if ('active' in data):
@@ -195,7 +195,7 @@ class EventDetail:
             flag = True
             end_date = data['end_date']
             date_time = DateTime()
-            end_date = date_time.conver_human_creadeble_2_unix_timetamp(end_date)
+            end_date = date_time.conver_human_creadeble_2_unix_timetamp_local(end_date)
             event.end_date = end_date
         if ('name' in data):
             flag = True
@@ -209,7 +209,7 @@ class EventDetail:
             flag = True
             start_date = data['start_date']
             date_time = DateTime()
-            start_date = date_time.conver_human_creadeble_2_unix_timetamp(start_date)
+            start_date = date_time.conver_human_creadeble_2_unix_timetamp_local(start_date)
             event.start_date = start_date
         if ('active' in data):
             flag = True
