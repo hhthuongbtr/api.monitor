@@ -1,16 +1,13 @@
 import requests
 import json
 from setting.DateTime import DateTime
-from setting.settings import SCC_URL
+from scc_request import ApiRequest
 
 class Scc:
     def __init__(self):
-        self.url = SCC_URL
-        self.headers =  {
-            'content-type': 'application/json'
-        }
         date_time = DateTime()
         self.now = date_time.get_now_as_isofortmat()
+        self.scc_api = ApiRequest() 
 
     def post(self, json_data):
         print json_data
@@ -79,8 +76,7 @@ class Scc:
                 }]
         data = json.dumps(data)
         print data
-        rsp = requests.post(self.url, data=data, headers=self.headers)
-        #rsp = requests.post(url, data)
+        rsp = scc_api.post(data)
         print rsp.status_code
         print rsp.json()
         return rsp
