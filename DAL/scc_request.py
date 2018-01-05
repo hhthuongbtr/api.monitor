@@ -15,33 +15,19 @@ class ApiRequest:
             rsp = requests.get(self.url, data=data, headers=self.headers, timeout=5)
         except ConnectionError as e:
             return e
-        if rsp.status_code == 200:
-            return rsp.text
-        elif rsp.status_code >= 500:
-            return "Check your proxy or web services"
-        else:
-            return rsp.status_code 
+        return rsp 
 
     def put(self, data):
         try:
             rsp = requests.put(self.url, data=data, headers=self.headers, timeout=5)
         except ConnectionError as e:
             return e
-        if rsp.status_code == 200:
-            return rsp.text
-        elif rsp.status_code >= 500:
-            return "Check your proxy or web services"
-        else:
-            return rsp.status_code 
+        return rsp  
 
     def post(self, data):
         try:
             rsp = requests.put(self.url, data=data, headers=self.headers, timeout=5)
+            print rsp.json()
         except ConnectionError as e:
             return e
-        if rsp.status_code == 200:
-            return rsp.text
-        elif rsp.status_code >= 500:
-            return "Check your proxy or web services"
-        else:
-            return rsp.status_code 
+        return rsp  

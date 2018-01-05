@@ -10,7 +10,6 @@ class Scc:
         self.scc_api = ApiRequest() 
 
     def post(self, json_data):
-        print json_data
         if "queueBegin" in json_data:
             queueBegin = json_data['queueBegin']
         else:
@@ -77,5 +76,4 @@ class Scc:
         data = json.dumps(data)
         print data
         rsp = self.scc_api.post(data)
-        print rsp
         return rsp
