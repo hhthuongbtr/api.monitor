@@ -33,7 +33,7 @@ class Scc:
         if "createdIncident" in json_data:
             createdIncident = json_data['createdIncident']
         else:
-            createdIncident = None
+            createdIncident = False
         if "queueAlertID" in json_data:
             queueAlertID = json_data['queueAlertID']
         else:

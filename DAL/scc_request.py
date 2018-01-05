@@ -26,7 +26,7 @@ class ApiRequest:
 
     def post(self, data):
         try:
-            rsp = requests.put(self.url, data=data, headers=self.headers, timeout=5)
+            rsp = requests.post(self.url, data=data, headers=self.headers, timeout=5)
             print rsp.json()
         except ConnectionError as e:
             return e
