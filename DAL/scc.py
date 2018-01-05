@@ -76,7 +76,7 @@ class Scc:
                 }]
         data = json.dumps(data)
         print data
-        rsp = scc_api.post(data)
+        rsp = self.scc_api.post(data)
         print rsp.status_code
         print rsp.json()
         return rsp
