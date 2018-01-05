@@ -54,11 +54,11 @@ class AgentList:
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=202)
         
     @csrf_exempt
     def post(self, request, format=None):
-        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
 class AgentDetail:
     """
@@ -106,7 +106,7 @@ class AgentDetail:
         else:
             args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=202)
 
     @csrf_exempt
     def put(self, request, ip, format=None):
@@ -114,12 +114,12 @@ class AgentDetail:
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
             querry = "update agent set cpu=%s,mem=%s,disk=%s,last_update=unix_timestamp() where ip='%s';"%(data['cpu'],data['mem'],data['disk'],ip)
             RabbitMQQueue().push_query(querry)
-            return HttpResponse(status=status.HTTP_202_ACCEPTED)
-        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=202)
+        return HttpResponse(status=400)
 
     @csrf_exempt
     def delete(self, request, ip, format=None):
-        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
 #######################################################################
 #                                                                     #
@@ -169,10 +169,10 @@ class ProfileAgentList:
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=202)
 
     def post(self, request, format=None):
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=400)
 
 class ProfileAgentDetail:
     """
@@ -223,7 +223,7 @@ class ProfileAgentDetail:
         else:
             args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=202)
 
     @csrf_exempt
     def put(self, request, pk, format=None):
@@ -232,34 +232,34 @@ class ProfileAgentDetail:
         if ('status' in data) and len(data)==1:
             querry="update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_202_ACCEPTED)
+            return HttpResponse(status=202)
         #video
         elif ('video' in data) and len(data)==1:
             querry="update profile_agent set video=%s,last_update=unix_timestamp() where id=%s;"%(data['video'],pk)
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_202_ACCEPTED)
+            return HttpResponse(status=202)
         #dropframe
         elif ('dropframe' in data) and len(data)==1:
             querry="update profile_agent set dropframe=%s,last_update=unix_timestamp() where id=%s;"%(data['dropframe'],pk)
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_202_ACCEPTED)
+            return HttpResponse(status=202)
         #discontinuity
         elif ('discontinuity' in data) and len(data)==1:
             querry="update profile_agent set discontinuity=%s,last_update=unix_timestamp() where id=%s;"%(data['discontinuity'],pk)
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_202_ACCEPTED)
+            return HttpResponse(status=202)
         #analyzer_status
         elif ('analyzer_status' in data) and len(data)==1:
             querry="update profile_agent set analyzer_status=%s,last_update=unix_timestamp() where id=%s;"%(data['analyzer_status'],pk)
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_202_ACCEPTED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=202)
+        return Response(status=400)
 
     @csrf_exempt
     def delete(self, request, pk, format=None):
         profileAgent = self.get_object(pk)
         profileAgent.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=204)
 
 #Agent.py get list profile agent by ip
 def get_profile_agent_by_agent_ip(request, ip):
@@ -269,7 +269,7 @@ def get_profile_agent_by_agent_ip(request, ip):
         args = []
         args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(data, content_type='application/json', status=204)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'          : i[0] if i[0] else None,
@@ -290,7 +290,7 @@ def get_profile_agent_analyzer(request):
         args = []
         args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(data, content_type='application/json', status=204)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'          : i[0] if i[0] else None,
@@ -309,7 +309,7 @@ def get_profile_agent_analyzer_check(request):
         args = []
         args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(data, content_type='application/json', status=204)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'                   : i[0] if i[0] else None,
@@ -331,7 +331,7 @@ def get_snmp_agent(request,ip):
         args = []
         args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(data, content_type='application/json', status=204)
     args = []
     for i in profile_agent_list:
         args.append({ 'id'                   : i[0] if i[0] else None,

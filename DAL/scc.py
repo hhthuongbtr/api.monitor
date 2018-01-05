@@ -1,10 +1,11 @@
 import requests
 import json
 from setting.DateTime import DateTime
+from setting.settings import SCC_URL
 
 class Scc:
     def __init__(self):
-        self.url = "http://42.116.254.238:3333/init/opsview?api_key=e3708c4e68dc2654d1c93c91c751284d"
+        self.url = SCC_URL
         self.headers =  {
             'content-type': 'application/json'
         }

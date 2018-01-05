@@ -117,3 +117,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+
+#SCC POST URL
+SCC_URL = "http://42.116.254.238:3333/init/opsview?api_key=e3708c4e68dc2654d1c93c91c751284d"
