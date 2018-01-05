@@ -1,7 +1,9 @@
 from DAL.event import Event as EventDAL
 
-event = EventDAL()
 class Event():
+    def __init__(self):
+        self.event = EventDAL()
+
     def parse_data_row_as_json_fortmat(self, event_monitor):
         agrs = {
             'id'                    : event_monitor[0],
@@ -22,36 +24,39 @@ class Event():
         return agrs
         
     def get_event_monitor_list(self):
-        event_monitor_list = event.get_event_monitor_list()
+        event_monitor_list = self.event.get_event_monitor_list()
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
     def get_running_event_monitor_list(self):
-        event_monitor_list = event.get_running_event_monitor_list()
+        event_monitor_list = self.event.get_running_event_monitor_list()
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
     def get_waiting_event_monitor_list(self):
-        event_monitor_list = event.get_waiting_event_monitor_list()
+        event_monitor_list = self.event.get_waiting_event_monitor_list()
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
     def get_completed_event_monitor_list(self):
-        event_monitor_list = event.get_completed_event_monitor_list()
+        event_monitor_list = self.event.get_completed_event_monitor_list()
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
     def get_event_monitor(self, pk):
-        event_monitor_list = event.get_event_monitor(pk)
+        event_monitor_list = self.event.get_event_monitor(pk)
         agrs = []
         if len(event_monitor_list):
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor_list[0]))
         return agrs
+
+    def update_last_update(self, pk):
+        return self.event.get_event_monitor(pk)

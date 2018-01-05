@@ -18,16 +18,21 @@ class Scc:
     """
     @csrf_exempt
     def routing(self, request):
-        json_data = json.loads(request.body)
         if request.method  == "POST":
-            return self.post(json_data, request)
+            return self.http_post(request)
 
     @csrf_exempt
-    def post(self, json_data, request = None):
+    def post(self, json_data):
         scc = SccBLL()
         rsp = scc.post(json_data)
         data = json.dumps(rsp.json())
-        if request:
-            return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
         return rsp.json()
+
+    @csrf_exempt
+    def http_post(self, request):
+        json_data = json.loads(request.body)
+        scc = SccBLL()
+        rsp = scc.post(json_data)
+        data = json.dumps(rsp.json())
+        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 

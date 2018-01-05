@@ -20,22 +20,22 @@ class Database:
     def execute_non_query(self, query):
         if not query:
             print 'No query!'
-            return 0
+            return 1
         try:
             session = self.connect()
             cur=session.cursor()
             cur.execute(query)
             session.commit()
             self.close_connect(session)
-            return 1
-        except Exception as e:
             return 0
+        except Exception as e:
+            return 1
 
     '''SELECT'''
     def execute_query(self, query):
         if not query:
             print 'No query!'
-            return 0
+            return 1
         try:
             session = self.connect()
             cur=session.cursor()
@@ -45,4 +45,4 @@ class Database:
             return rows
         except Exception as e:
             print 'Bug: ' + str(e)
-            return 1
+            return 0

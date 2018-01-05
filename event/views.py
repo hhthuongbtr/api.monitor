@@ -887,6 +887,8 @@ class MonitorDetail:
     def get(self, request, event_monitor_id):
         args = {}
         monitor = self.event.get_event_monitor(event_monitor_id)
+        #update last update
+        self.event.update_last_update(event_monitor_id)
         args["monitor"] = monitor
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
