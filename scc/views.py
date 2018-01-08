@@ -30,7 +30,6 @@ class Scc:
 
     @csrf_exempt
     def http_post(self, request):
-        print request.body
         try:
             json_data = json.loads(request.body)
         except Exception as e:
