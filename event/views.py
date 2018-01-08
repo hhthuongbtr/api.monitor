@@ -776,6 +776,8 @@ class EventMonitorDetail:
             args['event_monitor'] = args_event_monitor
         else:
             args["detail"] = 'Not found.'
+        date_time = DateTime()
+        args['now'] = date_time.get_now()
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
@@ -827,7 +829,6 @@ class EventMonitorDetail:
 
     @csrf_exempt
     def delete(self, request, pk):
-        print "aa"
         agrs={}
         event_monitor = self.get_object(pk)
         if not event_monitor:
@@ -852,26 +853,40 @@ class MonitorList:
         args = {}
         monitor_list = self.event.get_event_monitor_list()
         args['monitor_list'] = monitor_list
+        date_time = DateTime()
+        args['now'] = date_time.get_now()
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     @csrf_exempt
     def get_running_monitor_list(self, request):
         running_monitor_list = self.event.get_running_event_monitor_list()
-        data = json.dumps(running_monitor_list)
+        args = {}
+        args['monitor_running_list'] = running_monitor_list
+        date_time = DateTime()
+        args['now'] = date_time.get_now()
+        data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
 
     @csrf_exempt
     def get_waiting_monitor_list(self, request):
-        running_monitor_list = self.event.get_waiting_event_monitor_list()
-        data = json.dumps(running_monitor_list)
+        waiting_monitor_list = self.event.get_waiting_event_monitor_list()
+        args = {}
+        args['monitor_running_list'] = waiting_monitor_list
+        date_time = DateTime()
+        args['now'] = date_time.get_now()
+        data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     @csrf_exempt
     def get_completed_monitor_list(self, request):
-        running_monitor_list = self.event.get_completed_event_monitor_list()
-        data = json.dumps(running_monitor_list)
+        completed_monitor_list = self.event.get_completed_event_monitor_list()
+        args = {}
+        args['monitor_completed_list'] = completed_monitor_list
+        date_time = DateTime()
+        args['now'] = date_time.get_now()
+        data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
 class MonitorDetail:
@@ -891,6 +906,8 @@ class MonitorDetail:
         #update last update
         self.event.update_last_update(event_monitor_id)
         args["monitor"] = monitor
+        date_time = DateTime()
+        args['now'] = date_time.get_now()
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
