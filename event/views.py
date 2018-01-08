@@ -891,16 +891,16 @@ class MonitorList:
 
 class MonitorDetail:
     @csrf_exempt
-    def routing(self, request, region = None, event_monitor_id):
+    def routing(self, request, event_monitor_id):
         if request.method == "GET":
-            return self.get(request, region, event_monitor_id)
+            return self.get(request, event_monitor_id)
 
     @csrf_exempt
     def __init__(self):
         self.event = EventBLL()
 
     @csrf_exempt
-    def get(self, request, region, event_monitor_id):
+    def get(self, request, event_monitor_id):
         args = {}
         monitor = self.event.get_event_monitor(event_monitor_id)
         #update last update
