@@ -59,4 +59,4 @@ class Event():
         return agrs
 
     def update_last_update(self, pk):
-        return self.event.get_event_monitor(pk)
+        return self.event.update_last_update(pk)

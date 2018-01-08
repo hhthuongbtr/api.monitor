@@ -45,7 +45,6 @@ class Event():
         return event_monitor_list
 
     def update_last_update(self, pk):
-        sql = """update event_monitor set last_update = unix_timestamp(now()) where id = %d"""(int(pk))
+        sql = """update event_monitor set last_update = unix_timestamp(now()) where id = %d"""%(int(pk))
         status = self.db.execute_non_query(sql)
-        print "update OK"
         return status

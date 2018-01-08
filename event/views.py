@@ -861,6 +861,7 @@ class MonitorList:
         data = json.dumps(running_monitor_list)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
+
     @csrf_exempt
     def get_waiting_monitor_list(self, request):
         running_monitor_list = self.event.get_waiting_event_monitor_list()
@@ -893,90 +894,3 @@ class MonitorDetail:
         data = json.dumps(args)
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
-
-# class Template:
-#     @csrf_exempt
-#     def event(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         user = user_info(request)
-#         return render_to_response("event/event.html", user)
-
-#     @csrf_exempt
-#     def encoder(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         user = user_info(request)
-#         return render_to_response("event/encoder.html", user)
-
-#     @csrf_exempt
-#     def service(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         user = user_info(request)
-#         return render_to_response("event/service.html", user)
-
-#     @csrf_exempt
-#     def monitor(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         user = user_info(request)
-#         return render_to_response("event/monitor.html", user)
-
-#     @csrf_exempt
-#     def monitor_add(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         user = user_info(request)
-#         return render_to_response("event/monitor/add/add.html", user)
-
-#     @csrf_exempt
-#     def monitor_add_step1(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         return render_to_response("event/monitor/add/step1.html")
-
-#     @csrf_exempt
-#     def monitor_add_step2(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         return render_to_response("event/monitor/add/step2.html")
-
-#     @csrf_exempt
-#     def monitor_add_step3(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         return render_to_response("event/monitor/add/step3.html")
-
-#     @csrf_exempt
-#     def monitor_edit(self, request, event_monitor_id):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         try:
-#             monitor = EventMonitor.objects.get(pk=event_monitor_id)
-#         except ObjectDoesNotExist:
-#             monitor = None
-#         if monitor:
-#             print monitor
-#             args={}
-#             args['monitor'] = monitor
-#             return render_to_response("event/monitor/edit/edit.html", args)
-#         return self.monitor()
-
-#     @csrf_exempt
-#     def monitor_edit_step1(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         return render_to_response("event/monitor/edit/step1.html")
-
-#     @csrf_exempt
-#     def monitor_edit_step2(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         return render_to_response("event/monitor/edit/step2.html")
-
-#     @csrf_exempt
-#     def monitor_edit_step3(self, request):
-#         if not request.user.is_authenticated():
-#             return HttpResponseRedirect('/accounts/login')
-#         return render_to_response("event/monitor/edit/step3.html")
