@@ -23,29 +23,29 @@ class Event():
         }
         return agrs
         
-    def get_event_monitor_list(self):
-        event_monitor_list = self.event.get_event_monitor_list()
+    def get_event_monitor_list(self, region = None):
+        event_monitor_list = self.event.get_event_monitor_list(region = region)
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
-    def get_running_event_monitor_list(self):
-        event_monitor_list = self.event.get_running_event_monitor_list()
+    def get_running_event_monitor_list(self, region = None):
+        event_monitor_list = self.event.get_running_event_monitor_list(region = region)
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
-    def get_waiting_event_monitor_list(self):
-        event_monitor_list = self.event.get_waiting_event_monitor_list()
+    def get_waiting_event_monitor_list(self, region = None):
+        event_monitor_list = self.event.get_waiting_event_monitor_list(region = region)
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))
         return agrs
 
-    def get_completed_event_monitor_list(self):
-        event_monitor_list = self.event.get_completed_event_monitor_list()
+    def get_completed_event_monitor_list(self, region = None):
+        event_monitor_list = self.event.get_completed_event_monitor_list(region = region)
         agrs = []
         for event_monitor in event_monitor_list:
             agrs.append(self.parse_data_row_as_json_fortmat(event_monitor))

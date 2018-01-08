@@ -74,6 +74,5 @@ class Scc:
                     "AlertStatus" : AlertStatus
                 }]
         data = json.dumps(data)
-        print data
         rsp = self.scc_api.post(data)
         return rsp

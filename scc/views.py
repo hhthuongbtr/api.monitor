@@ -39,9 +39,9 @@ class Scc:
             json_data['AlertStatus']
         except Exception as e:
             json_data = json.loads(json_data)
-        print "data post: " + str(json_data)
         scc = SccBLL()
         rsp = scc.post(json_data)
+        print rsp.json()
         data = json.dumps(rsp.json())
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=202)
 

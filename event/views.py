@@ -840,18 +840,18 @@ class EventMonitorDetail:
 
 class MonitorList:
     @csrf_exempt
-    def routing(self, request):
+    def routing(self, request, region = None):
         if request.method == "GET":
-            return self.get(request)
+            return self.get(request, region)
 
     @csrf_exempt
     def __init__(self):
         self.event = EventBLL()
 
     @csrf_exempt
-    def get(self, request):
+    def get(self, request, region = None):
         args = {}
-        monitor_list = self.event.get_event_monitor_list()
+        monitor_list = self.event.get_event_monitor_list(region = region)
         args['monitor_list'] = monitor_list
         date_time = DateTime()
         args['now'] = date_time.get_now()
@@ -859,8 +859,8 @@ class MonitorList:
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     @csrf_exempt
-    def get_running_monitor_list(self, request):
-        running_monitor_list = self.event.get_running_event_monitor_list()
+    def get_running_monitor_list(self, request, region = None):
+        running_monitor_list = self.event.get_running_event_monitor_list(region = region)
         args = {}
         args['monitor_running_list'] = running_monitor_list
         date_time = DateTime()
@@ -870,8 +870,8 @@ class MonitorList:
 
 
     @csrf_exempt
-    def get_waiting_monitor_list(self, request):
-        waiting_monitor_list = self.event.get_waiting_event_monitor_list()
+    def get_waiting_monitor_list(self, request, region = None):
+        waiting_monitor_list = self.event.get_waiting_event_monitor_list(region = region)
         args = {}
         args['monitor_running_list'] = waiting_monitor_list
         date_time = DateTime()
@@ -880,8 +880,8 @@ class MonitorList:
         return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
 
     @csrf_exempt
-    def get_completed_monitor_list(self, request):
-        completed_monitor_list = self.event.get_completed_event_monitor_list()
+    def get_completed_monitor_list(self, request, region = None):
+        completed_monitor_list = self.event.get_completed_event_monitor_list(region = region)
         args = {}
         args['monitor_completed_list'] = completed_monitor_list
         date_time = DateTime()
