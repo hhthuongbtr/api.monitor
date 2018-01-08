@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^(?P<region>\w+)/completed/$', views.MonitorList().get_waiting_monitor_list),
 
     url(r'^monitor/(?P<event_monitor_id>[0-9]+)/$', views.MonitorDetail().routing),
+    url(r'^(?P<region>\w+)/monitor/(?P<event_monitor_id>[0-9]+)/$', views.MonitorDetail().routing),
 ]
 
