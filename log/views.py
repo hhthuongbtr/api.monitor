@@ -1,8 +1,6 @@
 from log.models import *
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.response import Response
-from rest_framework import status
 from setting.customSQL import *
 from setting.rabbitmq_queue import *
 import json
@@ -54,7 +52,7 @@ class LogList:
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     @csrf_exempt
     def post(self, request, format=None):
@@ -62,8 +60,8 @@ class LogList:
         if len(data)==3 and ('host' and 'tag' and 'msg' in data):
             querry="insert into logs(host,tag,datetime,msg) values('%s','%s', NOW(),'%s');"%(data['host'],data['tag'],data['msg'])
             RabbitMQQueue().push_query(querry)
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=201)
+        return HttpResponse(status=400)
 
 class LogDetail:
     """
@@ -113,10 +111,10 @@ class LogDetail:
 
     @csrf_exempt
     def put(self, request, pk, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
     @csrf_exempt
     def delete(self, request, pk, format=None):
         log = self.get_object(pk)
         log.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)
