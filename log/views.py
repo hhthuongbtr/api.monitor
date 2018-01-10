@@ -56,7 +56,7 @@ class LogList:
 
     @csrf_exempt
     def post(self, request, format=None):
-        data=request.data
+        data=request.body
         if len(data)==3 and ('host' and 'tag' and 'msg' in data):
             querry="insert into logs(host,tag,datetime,msg) values('%s','%s', NOW(),'%s');"%(data['host'],data['tag'],data['msg'])
             RabbitMQQueue().push_query(querry)
