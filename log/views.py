@@ -58,7 +58,6 @@ class LogList:
     def post(self, request, format=None):
         data = request.body
         data = json.loads(data)
-        print data
         if len(data)==3 and ('host' and 'tag' and 'msg' in data):
             querry="insert into logs(host,tag,datetime,msg) values('%s','%s', NOW(),'%s');"%(data['host'],data['tag'],data['msg'])
             RabbitMQQueue().push_query(querry)

@@ -110,7 +110,8 @@ class AgentDetail:
 
     @csrf_exempt
     def put(self, request, ip, format=None):
-        data = request.data
+        data = request.body
+        data = json.loads(data)
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
             querry = "update agent set cpu=%s,mem=%s,disk=%s,last_update=unix_timestamp() where ip='%s';"%(data['cpu'],data['mem'],data['disk'],ip)
             RabbitMQQueue().push_query(querry)
@@ -172,7 +173,7 @@ class ProfileAgentList:
         return HttpResponse(data, content_type='application/json', status=202)
 
     def post(self, request, format=None):
-        return Response(serializer.errors, status=400)
+        return HttpResponse(status=400)
 
 class ProfileAgentDetail:
     """
@@ -227,7 +228,8 @@ class ProfileAgentDetail:
 
     @csrf_exempt
     def put(self, request, pk, format=None):
-        data=request.data
+        data = request.body
+        data = json.loads(data)
         #Status
         if ('status' in data) and len(data)==1:
             querry="update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
@@ -253,13 +255,13 @@ class ProfileAgentDetail:
             querry="update profile_agent set analyzer_status=%s,last_update=unix_timestamp() where id=%s;"%(data['analyzer_status'],pk)
             RabbitMQQueue().push_query(querry)
             return HttpResponse(status=202)
-        return Response(status=400)
+        return HttpResponse(status=400)
 
     @csrf_exempt
     def delete(self, request, pk, format=None):
         profileAgent = self.get_object(pk)
         profileAgent.delete()
-        return Response(status=204)
+        return HttpResponse(status=204)
 
 #Agent.py get list profile agent by ip
 def get_profile_agent_by_agent_ip(request, ip):
