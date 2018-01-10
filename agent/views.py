@@ -65,13 +65,13 @@ class AgentDetail:
     Retrieve, update or delete a agent instance.
     """
     @csrf_exempt
-    def routing(self, request, pk):
+    def routing(self, request, ip):
         if request.method == "GET":
-            return self.get(request, pk)
+            return self.get(request, ip)
         elif request.method == "PUT":
-            return self.put(request, pk)
+            return self.put(request, ip)
         elif request.method == "DELETE":
-            return self.delete(request, pk)
+            return self.delete(request, ip)
 
     @csrf_exempt
     def get_object(self, ip):
