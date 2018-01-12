@@ -1,5 +1,4 @@
 import MySQLdb as mdb
-import json
 from django.conf import settings
 
 class Database:
@@ -15,34 +14,49 @@ class Database:
         return session.close()
 
     '''
-    INSERT, UPDATE, DELETE, CREATE, and SET statement
+    INSERT, UPDATE, DELETE, CREATE statement
     '''
     def execute_non_query(self, query):
         if not query:
-            print 'No query!'
-            return 1
+            status = 1
+            message = "No query"
+            data = None
+            return status, message, data
         try:
             session = self.connect()
             cur=session.cursor()
             cur.execute(query)
             session.commit()
             self.close_connect(session)
-            return 0
+            status = 0
+            message = "Ok"
+            data = None
+            return status, message, data
         except Exception as e:
-            return 1
+            status = 1
+            message = str(e)
+            data = None
+            return status, message, data
 
     '''SELECT'''
     def execute_query(self, query):
         if not query:
-            print 'No query!'
-            return 1
+            status = 1
+            message = "No query"
+            data = None
+            return status, message, data
         try:
             session = self.connect()
             cur=session.cursor()
             cur.execute(query)
-            rows = cur.fetchall()
+            data_table = cur.fetchall()
             self.close_connect(session)
-            return rows
+            status = 0
+            message = "Ok"
+            data = data_table
+            return status, message, data
         except Exception as e:
-            print 'Bug: ' + str(e)
-            return 0
+            status = 1
+            message = str(e)
+            data = None
+            return status, message, data

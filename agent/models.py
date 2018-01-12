@@ -19,6 +19,24 @@ class Agent(models.Model):
         managed = True
         db_table = 'agent'
 
+    def convert_agent_list_to_single_dictionary(self, agent):
+        agrs = {
+                    "id"            : int(agent.id),
+                    "name"          : agent.name,
+                    "ip"            : agent.ip,
+                    "descr"         : agent.descr,
+                    "thread"        : int(agent.thread),
+                    "cpu"           : int(agent.cpu),
+                    "mem"           : int(agent.mem),
+                    "disk"          : int(agent.disk),
+                    "last_update"   : int(agent.last_update),
+                    "active"        : int(agent.active),
+                    "lng"           : agent.lng,
+                    "lat"           : agent.lat
+                }
+        return agrs
+
+
 class ProfileAgent(models.Model):
     profile_id = models.IntegerField(blank=True, null=True)
     agent_id = models.IntegerField(blank=True, null=True)
@@ -39,6 +57,25 @@ class ProfileAgent(models.Model):
         managed = True
         db_table = 'profile_agent'
 #        unique_together = (('profile_id', 'agent_id'),)
+    def convert_profile_agent_list_to_single_dictionary(self, profile_agent):
+        agrs = {
+                    'id'                        : int(profile_agent.id),
+                    'profile_id'                : int(profile_agent.profile_id),
+                    'agent_id'                  : int(profile_agent.agent_id),
+                    'status'                    : int(profile_agent.status),
+                    'analyzer_status'           : int(profile_agent.analyzer_status),
+                    'dropframe'                 : int(profile_agent.dropframe),
+                    'dropframe_threshold'       : int(profile_agent.dropframe_threshold),
+                    'discontinuity'             : int(profile_agent.discontinuity),
+                    'discontinuity_threshold'   : int(profile_agent.discontinuity_threshold),
+                    'check'                     : int(profile_agent.check),
+                    'video'                     : int(profile_agent.video),
+                    'audio'                     : int(profile_agent.audio),
+                    'monitor'                   : int(profile_agent.monitor),
+                    'analyzer'                  : int(profile_agent.analyzer),
+                    'last_update'               : int(profile_agent.last_update)
+                }
+        return agrs
 
 class Server(models.Model):
     name = models.CharField(unique=True, max_length=45, blank=True, null=True)
