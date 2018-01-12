@@ -204,7 +204,7 @@ class ProfileAgentDetail:
         data = request.body
         data = json.loads(data)
         #Status
-        if ('status' in data) and len(data)==1:
+        if ('status' in data):
             #{"status": check, "agent": agent, "ip": ip}
             querry="update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
             RabbitMQQueue().push_query(querry)
