@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
-from setting.DateTime import DateTime
+from utils.DateTime import DateTime
 
 class Encoder(models.Model):
     name = models.CharField(max_length=255)

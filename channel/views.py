@@ -1,9 +1,7 @@
+import json
 from channel.models import *
 from django.http import Http404, HttpResponse
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-import json
+from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
 #######################################################################
@@ -11,10 +9,17 @@ from django.core.exceptions import ObjectDoesNotExist
 #-------------------------------cHANNEL-------------------------------#
 #                                                                     #
 #######################################################################
-class ChannelList(APIView):
+class ChannelList:
     """
     List all snippets, or create a new snippet.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
     def get(self, request, format=None):
         args = {}
         try:
@@ -36,15 +41,24 @@ class ChannelList(APIView):
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def post(self, request, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
-class ChannelDetail(APIView):
+class ChannelDetail:
     """
     Retrieve, update or delete a snippet instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+
     def get_object(self, pk):
         try:
             return Channel.objects.get(pk=pk)
@@ -68,13 +82,13 @@ class ChannelDetail(APIView):
         else:
             args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def put(self, request, pk, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
     def delete(self, request, pk, format=None):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)
 
 
 
@@ -84,10 +98,17 @@ class ChannelDetail(APIView):
 #                                                                     #
 #######################################################################
 
-class GroupList(APIView):
+class GroupList:
     """
     List all snippets, or create a new snippet.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
     def get(self, request, format=None):
         args = {}
         try:
@@ -106,15 +127,24 @@ class GroupList(APIView):
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def post(self, request, format=None):
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
-class GroupDetail(APIView):
+class GroupDetail:
     """
     Retrieve, update or delete a snippet instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+
     def get_object(self, pk):
         try:
             return Group.objects.get(pk=pk)
@@ -135,13 +165,13 @@ class GroupDetail(APIView):
         else:
             args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def put(self, request, pk, format=None):
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
     def delete(self, request, pk, format=None):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)
 
 #######################################################################
 #                                                                     #
@@ -150,10 +180,17 @@ class GroupDetail(APIView):
 #######################################################################
 
 
-class ProfileList(APIView):
+class ProfileList:
     """
     List all snippets, or create a new snippet.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
     def get(self, request, format=None):
         args = {}
         try:
@@ -181,15 +218,24 @@ class ProfileList(APIView):
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def post(self, request, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
-class ProfileDetail(APIView):
+class ProfileDetail:
     """
     Retrieve, update or delete a snippet instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+
     def get_object(self, pk):
         try:
             return Profile.objects.get(pk=pk)
@@ -218,14 +264,14 @@ class ProfileDetail(APIView):
         else:
             args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
 
     def put(self, request, pk, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
     def delete(self, request, pk, format=None):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)
 
 
 
@@ -235,10 +281,17 @@ class ProfileDetail(APIView):
 #                                                                     #
 #######################################################################
 
-class ProfileGroupList(APIView):
+class ProfileGroupList:
     """
     List all snippets, or create a new snippet.
     """
+    @csrf_exempt
+    def routing(self, request):
+        if request.method == "GET":
+            return self.get(request)
+        elif request.method == "POST":
+            return self.post(request)
+
     def get(self, request, format=None):
         args = {}
         try:
@@ -258,15 +311,24 @@ class ProfileGroupList(APIView):
         else:
             args["detail"] = "Empty"
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def post(self, request, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
-class ProfileGroupDetail(APIView):
+class ProfileGroupDetail:
     """
     Retrieve, update or delete a snippet instance.
     """
+    @csrf_exempt
+    def routing(self, request, pk):
+        if request.method == "GET":
+            return self.get(request, pk)
+        elif request.method == "PUT":
+            return self.put(request, pk)
+        elif request.method == "DELETE":
+            return self.delete(request, pk)
+
     def get_object(self, pk):
         try:
             return ProfileGroup.objects.get(pk=pk)
@@ -288,10 +350,10 @@ class ProfileGroupDetail(APIView):
         else:
             args["detail"] = 'Not found.'
         data = json.dumps(args)
-        return HttpResponse(data, content_type='application/json', status=status.HTTP_200_OK)
+        return HttpResponse(data, content_type='application/json', status=200)
 
     def put(self, request, pk, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=400)
 
     def delete(self, request, pk, format=None):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)

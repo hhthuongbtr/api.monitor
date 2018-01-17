@@ -1,10 +1,9 @@
+import json
 from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-import json
 from BLL.scc import Scc as SccBLL
-# from accounts.user_info import *
 
 
 #######################################################################
@@ -22,10 +21,10 @@ class Scc:
             return self.http_post(request)
 
     @csrf_exempt
-    def post(self, json_data):
+    def post(self, data):
+        json_data = json.loads(json.dumps(data))
         scc = SccBLL()
         rsp = scc.post(json_data)
-        data = json.dumps(rsp.json())
         return rsp.json()
 
     @csrf_exempt

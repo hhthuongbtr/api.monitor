@@ -1,6 +1,6 @@
 import requests
 import json
-from setting.DateTime import DateTime
+from utils.DateTime import DateTime
 from scc_request import ApiRequest
 
 class Scc:

@@ -1,13 +1,16 @@
+import time, json
 from agent.models import *
+from rest_framework import status
+from utils.rabbitmq_queue import *
+from rest_framework.response import Response
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.response import Response
-from rest_framework import status
-import json
-from setting.customSQL import *
-from setting.rabbitmq_queue import *
 from django.core.exceptions import ObjectDoesNotExist
+from scc.views import Scc
+from utils.check_iptv import Snmp
+from utils.DateTime import DateTime
 from BLL.agent import ProfileAgent as ProfileAgentBLL
+from setting.settings import PUSH_ALARM as is_push_alarm
 
 
 #######################################################################
@@ -204,11 +207,34 @@ class ProfileAgentDetail:
         data = request.body
         data = json.loads(data)
         #Status
-        if ('status' in data):
-            #{"status": check, "agent": agent, "ip": ip}
-            querry="update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
-            RabbitMQQueue().push_query(querry)
-            return HttpResponse(status=202)
+        if ("status" in data):
+            agent_name = data["agent"]
+            if "Origin" in agent_name or "4500" in agent_name:
+                profile_agent = self.get_object(pk)
+                date_time = DateTime()
+                if not profile_agent:
+                    return HttpResponse(status=400)
+                profile_agent.status = data["status"]
+                profile_agent.last_update = date_time.get_now()
+                profile_agent.save()
+                if is_push_alarm:
+                    time.sleep(0.5)
+                    snmp = Snmp(str(data["ip"]).replace(' ', ''))
+                    alarm_status, msg = snmp.check_agent()
+                    data = {
+                        "ishost"            : False,
+                        "queueServiceName"  : "Check_Agent_IPTV_Status",
+                        "queueHost"         : agent_name, 
+                        "msg"               : msg,
+                        "AlertStatus"       : alarm_status
+                    }
+                    scc = Scc()
+                    scc.post(data)
+                return HttpResponse(status=202)
+            else:
+                querry = "update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
+                RabbitMQQueue().push_query(querry)
+                return HttpResponse(status=202)
         #video
         elif ('video' in data) and len(data)==1:
             querry="update profile_agent set video=%s,last_update=unix_timestamp() where id=%s;"%(data['video'],pk)

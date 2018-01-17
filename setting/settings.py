@@ -120,3 +120,5 @@ STATIC_URL = '/static/'
 
 #SCC POST URL
 SCC_URL = "http://42.116.254.238:3333/init/opsview?api_key=e3708c4e68dc2654d1c93c91c751284d"
+#Push SCC alarm
+PUSH_ALARM = False #(True/False)

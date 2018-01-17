@@ -1,9 +1,8 @@
+import json
 from log.models import *
+from utils.rabbitmq_queue import *
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from setting.customSQL import *
-from setting.rabbitmq_queue import *
-import json
 
 
 #######################################################################
