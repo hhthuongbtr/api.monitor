@@ -17,48 +17,41 @@ class Snmp:
         return data
 
     def get_human_readable_status(self, status):
-        alarm_status = {0:'OK', 1:'WARNING', 2:'CRITICAL', 3:'UNKNOWN'} [status]
+        alarm_status = {0: "OK", 1: "WARNING", 2: "CRITICAL", 3: "UNKNOWN"} [status]
         return alarm_status
 
     def _get_alarm(self, profile_agent_list):
         message = ""
-        error_message = ""
+        error_message_list = []
         status = OK
         channel_error_num = 0
         count = 0
         for profile_agent in profile_agent_list:
             if profile_agent["monitor"]:
                 if profile_agent["status"] != 1:
+                    status = CRITICAL
+                    channel_error_num += 1
                     if profile_agent["status"] == 0:
-                        error_message += """%s-%s %s NoSource! """%(profile_agent["name"], 
-                                                                    profile_agent["type"], 
-                                                                    str(profile_agent["ip"]).split(':30120')[0])
-                        status = CRITICAL
-                        channel_error_num += 1
+                        error = "NoSource!"
                     elif profile_agent["status"] == 2:
-                        error_message += """%s-%s %s VideoError! """%(profile_agent["name"], 
-                                                                    profile_agent["type"], 
-                                                                    str(profile_agent["ip"]).split(':30120')[0])
-                        status = CRITICAL
-                        channel_error_num += 1
+                        error = "VideoError!"
                     elif profile_agent["status"] == 3:
-                        error_message += """%s-%s %s AudioError! """%(profile_agent["name"], 
-                                                                    profile_agent["type"], 
-                                                                    str(profile_agent["ip"]).split(':30120')[0])
-                        status = CRITICAL
-                        channel_error_num += 1
+                        error = "AudioError"
                     else:
-                        error_message += """%s-%s %s AudioError! """%(profile_agent["name"], 
-                                                                    profile_agent["type"], 
-                                                                    str(profile_agent["ip"]).split(':30120')[0])
-                        status = CRITICAL
-                        channel_error_num += 1
+                        error = "Unknow"
+                    error_message = {
+                                        "Channel": profile_agent["name"], 
+                                        "Ip": str(profile_agent["ip"]).split(":30120")[0], 
+                                        "AlarmStatus": error
+                    }
+
+                    error_message_list.append(error_message)
                 count += 1
         if status == OK:
             message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
         elif status == CRITICAL:
             message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
-        return status, message, error_message
+        return status, message, error_message_list
 
     def check_agent(self):
         start_time = time.time()
@@ -76,14 +69,16 @@ class Snmp:
             error_message = ""
         else:
             profile_agent_list = data["data"]
-            status, message, error_message = self._get_alarm(profile_agent_list)
+            status, message, error_message_list = self._get_alarm(profile_agent_list)
         alarm_status = self.get_human_readable_status(status)
-        msg = message + " \n" + error_message + " \n" + "Time to query " + str(round(time.time() - start_time)) + " seconds."
+        msg = {
+                    "Message": message, 
+                    "Data": error_message_list, 
+                    "ProcessingTime": "Time to query " + str(round(time.time() - start_time)) + " seconds."
+        }
         return alarm_status, msg
 
     def check_anylazer(self):
         pass
-
-
 
 

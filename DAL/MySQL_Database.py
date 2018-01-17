@@ -8,6 +8,13 @@ class Database:
         password = settings.DATABASES['default']['PASSWORD']
         host = settings.DATABASES['default']['HOST']
         port = int(settings.DATABASES['default']['PORT'])
+        """
+        db = "monitor"
+        user = "root"
+        password = "root"
+        host = "localhost"
+        port = 3306
+        """
         return mdb.connect(host=host, port=port, user=user, passwd=password, db=db, charset='utf8')
 
     def close_connect(self, session):
