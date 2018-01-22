@@ -140,30 +140,37 @@ class ProfileAgentList:
 
     #Agent.py get list profile agent by ip
     @csrf_exempt
-    def get_monitor_profile_agent_list(self, request, ip):
+    def get_profile_agent_monitor_list(self, request, ip):
         pa = ProfileAgentBLL()
-        data = pa.get_monitor_profile_agent_list(ip)
+        data = pa.get_profile_agent_monitor_list(ip)
         json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
         return HttpResponse(json_data, content_type='application/json', status=200)
 
     @csrf_exempt
-    def get_snmp_profile_agent_list(self, request, ip):
+    def get_profile_agent_snmp_list(self, request, ip):
         pa = ProfileAgentBLL()
-        data = pa.get_snmp_profile_agent_list(ip)
+        data = pa.get_profile_agent_snmp_list(ip)
         json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
         return HttpResponse(json_data, content_type='application/json', status=200)
 
     @csrf_exempt
-    def get_first_check_anylazer_profile_agent_list(self, request):
+    def get_profile_agent_check_video_list(self, request, ip):
         pa = ProfileAgentBLL()
-        data = pa.get_first_check_anylazer_profile_agent_list()
+        data = pa.get_profile_agent_check_video_list(ip)
         json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
         return HttpResponse(json_data, content_type='application/json', status=200)
 
     @csrf_exempt
-    def get_last_check_analyzer_profile_agent_list(self, request):
+    def get_profile_agent_first_check_anylazer_list(self, request):
         pa = ProfileAgentBLL()
-        data = pa.get_last_check_analyzer_profile_agent_list()
+        data = pa.get_profile_agent_first_check_anylazer_list()
+        json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
+        return HttpResponse(json_data, content_type='application/json', status=200)
+
+    @csrf_exempt
+    def get_profile_agent_last_check_analyzer_list(self, request):
+        pa = ProfileAgentBLL()
+        data = pa.get_profile_agent_last_check_analyzer_list()
         json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
         return HttpResponse(json_data, content_type='application/json', status=200)
 
