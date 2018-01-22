@@ -87,14 +87,14 @@ class ProfileAgent:
         for profile_agent in data_table:
             args.append({ 
                             "id"                : profile_agent[0] if profile_agent[0] else None,
-                            "ip"                : profile_agent[1] if profile_agent[1] else None,
-                            "protocol"          : profile_agent[2] if profile_agent[2] else None,
-                            "status"            : profile_agent[3] if profile_agent[3] else None,
-                            "thread"            : profile_agent[4] if profile_agent[4] else None,
-                            "name"              : profile_agent[5] if profile_agent[5] else None,
-                            "agent"             : profile_agent[6] if profile_agent[6] else None,
-                            "type"              : profile_agent[7] if profile_agent[7] else None,
-                            "video_status"      : profile_agent[8] if profile_agent[8] else None
+                            "ip"                : profile_agent[1] if profile_agent[1] else "",
+                            "protocol"          : profile_agent[2] if profile_agent[2] else "udp",
+                            "status"            : profile_agent[3] if profile_agent[3] else 0,
+                            "thread"            : profile_agent[4] if profile_agent[4] else 10,
+                            "name"              : profile_agent[5] if profile_agent[5] else "Unknow",
+                            "agent"             : profile_agent[6] if profile_agent[6] else "Unknow",
+                            "type"              : profile_agent[7] if profile_agent[7] else "",
+                            "video_status"      : profile_agent[8] if profile_agent[8] else 0
 
                         })
         return args
@@ -102,7 +102,7 @@ class ProfileAgent:
     def get_profile_agent_check_video_list(self, ip):
         sql = """select pa.id, p.ip, p.protocol, pa.status, a.thread, c.name, a.name as agent_name, p.type, pa.video 
             from profile as p, agent as a, profile_agent as pa, channel as c 
-            where a.ip = '%s' and a.active = 1 and pa.monitor = 1 and pa.status = 1 and pa.profile_id = p.id and pa.agent_id = a.id and p.channel_id = c.id"""%(ip)
+            where a.ip = '%s' and a.active = 1 and pa.monitor = 1 and (pa.status = 1 or pa.video !=1) and pa.profile_id = p.id and pa.agent_id = a.id and p.channel_id = c.id"""%(ip)
         status, message, data_table = self.db.execute_query(sql)
         if status == 1:
             http_status_code = 500
