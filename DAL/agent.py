@@ -58,11 +58,12 @@ class ProfileAgent:
                             'status'                 : profile_agent[5] if profile_agent[5] else 0,
                             'analyzer'               : profile_agent[6] if profile_agent[6] else 0,
                             'analyzer_status'        : profile_agent[7] if profile_agent[7] else 0,
+                            "video_status"           : profile_agent[8] if profile_agent[8] else 0
                         })
         return args
 
     def get_profile_agent_snmp_list(self, ip):
-        sql = """select pa.id, c.name, p.ip, p.type, pa.monitor, pa.status, pa.analyzer, pa.analyzer_status 
+        sql = """select pa.id, c.name, p.ip, p.type, pa.monitor, pa.status, pa.analyzer, pa.analyzer_status, pa.video 
             from profile as p, agent as a, profile_agent as pa,channel as c 
             where a.ip='%s' and (pa.monitor=1 or pa.analyzer=1) and a.active=1 and p.channel_id=c.id and pa.profile_id=p.id and pa.agent_id=a.id order by c.name"""%(ip)
         status, message, data_table = self.db.execute_query(sql)
