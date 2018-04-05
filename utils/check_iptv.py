@@ -13,7 +13,7 @@ class Snmp:
 
     def get_profile_agent_list(self):
         snmp = ProfileAgent()
-        data = snmp.get_snmp_profile_agent_list(self.host)
+        data = snmp.get_profile_agent_snmp_list(self.host)
         return data
 
     def get_human_readable_status(self, status):
@@ -28,19 +28,24 @@ class Snmp:
         count = 0
         for profile_agent in profile_agent_list:
             if profile_agent["monitor"]:
-                if profile_agent["status"] != 1:
+                if profile_agent["status"] == 1 and profile_agent["video_status"] != 1:
+                    profile_status = 2
+                else:
+                    profile_status = profile_agent["status"]
+                if profile_status != 1:
                     status = CRITICAL
                     channel_error_num += 1
-                    if profile_agent["status"] == 0:
+                    if profile_status == 0:
                         error = "NoSource!"
-                    elif profile_agent["status"] == 2:
+                    elif profile_status == 2:
                         error = "VideoError!"
-                    elif profile_agent["status"] == 3:
+                    elif profile_status == 3:
                         error = "AudioError"
                     else:
                         error = "Unknow"
                     error_message = {
                                         "Channel": profile_agent["name"], 
+                                        "Type": profile_agent["type"],
                                         "Ip": str(profile_agent["ip"]).split(":30120")[0], 
                                         "AlarmStatus": error
                     }
