@@ -124,3 +124,10 @@ SCC_URL = "http://42.116.254.238:3333/init/opsview?api_key=e3708c4e68dc2654d1c93
 PUSH_ALARM_CORE = False #(True/False)
 PUSH_ALARM_PROBE = False #(True/False)
 
+SYSTEM = {
+
+    "broadcast_time": {
+        "FROM": 6,
+        "TO": 22
+    }
+}

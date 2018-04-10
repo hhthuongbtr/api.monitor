@@ -1,5 +1,8 @@
 import time
 from BLL.agent import ProfileAgent
+from setting.settings import SYSTEM
+from DateTime import DateTime
+
 
 # Exit statuses recognized by Nagios
 OK = 0
@@ -58,11 +61,50 @@ class Snmp:
             message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
         return status, message, error_message_list
 
+    def _get_alarm_video(self, profile_agent_list):
+        message = ""
+        error_message_list = []
+        status = OK
+        channel_error_num = 0
+        count = 0
+        for profile_agent in profile_agent_list:
+            if profile_agent["monitor"]:
+                if profile_agent['status'] == 1 and profile_agent['video_status'] != 1:
+                    profile_agent_status = 2
+                else:
+                    profile_agent_status = profile_agent['status']
+                if profile_agent_status != 1:
+                    status = CRITICAL
+                    channel_error_num += 1
+                    if profile_agent_status == 0:
+                        error = "NoSource!"
+                    elif profile_agent_status == 2:
+                        error = "VideoError!"
+                    elif profile_agent_status == 3:
+                        error = "AudioError"
+                    else:
+                        error = "Unknow"
+                    error_message = {
+                                        "Channel": profile_agent["name"], 
+                                        "Type": profile_agent["type"],
+                                        "Ip": str(profile_agent["ip"]).split(':30120')[0], 
+                                        "AlarmStatus": error
+                    }
+
+                    error_message_list.append(error_message)
+                count += 1
+        if status == OK:
+            message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
+        elif status == CRITICAL:
+            message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
+        return status, message, error_message_list
+
     def check_agent(self):
         start_time = time.time()
         message = ""
         error_message = ""
         status = ""
+        error_message_list = []
         data = self.get_profile_agent_list()
         if data["status"] != 200:
             message = data["message"]
@@ -74,7 +116,13 @@ class Snmp:
             error_message = ""
         else:
             profile_agent_list = data["data"]
-            status, message, error_message_list = self._get_alarm(profile_agent_list)
+            date_time = DateTime()
+            now = date_time.get_now()
+            HH = date_time.get_hour(now)
+            if HH > SYSTEM["broadcast_time"]["FROM"] and HH < SYSTEM["broadcast_time"]["TO"]:
+                status, message, error_message_list = self._get_alarm_video(profile_agent_list)
+            else:
+                status, message, error_message_list = self._get_alarm(profile_agent_list)
         alarm_status = self.get_human_readable_status(status)
         msg = {
                     "Message": message, 
@@ -85,5 +133,3 @@ class Snmp:
 
     def check_anylazer(self):
         pass
-
-
