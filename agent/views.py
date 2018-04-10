@@ -240,10 +240,10 @@ class ProfileAgentDetail:
                 return HttpResponse(status=202)
             else:
                 if PUSH_ALARM_PROBE:
-                    print "probe"
                     time.sleep(0.5)
                     snmp = Snmp(str(data["ip"]).replace(' ', ''))
                     alarm_status, msg = snmp.check_agent()
+                    print msg
                     data = {
                         "ishost"            : False,
                         "queueServiceName"  : "Check_Agent_IPTV_Status",

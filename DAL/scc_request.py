@@ -25,6 +25,7 @@ class ApiRequest:
         return rsp  
 
     def post(self, data):
+        print data
         try:
             rsp = requests.post(self.url, data=data, headers=self.headers, timeout=5)
             print rsp.json()
