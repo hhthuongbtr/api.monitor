@@ -40,3 +40,8 @@ class DateTime:
         now = datetime.datetime.now()
         format_iso_now = now.isoformat()
         return format_iso_now
+        
+    def get_hour(self, unix_timestamp):
+        from datetime import datetime
+        dt = datetime.fromtimestamp(unix_timestamp)
+        return dt.hour
