@@ -1,0 +1,76 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters":{ 
+        "dal": {
+            "format": "dal: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "probe":{
+            "format":"probe: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "scc":{
+            "format":"scc: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "utils":{
+            "format":"utils: date: %(asctime)s - module: %(name)s - serverity: %(levelname)s - message: %(message)s"
+        }
+    },
+    "handlers": {
+        "dal_handler": {
+            "filename": "/var/log/api/DAL.log",
+            "mode": "a",
+            "encoding": "utf8",
+            "delay": false,
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "dal"
+        },
+        "probe_handler":{
+            "filename": "/var/log/api/probe.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "probe"
+        },
+        "scc_handler":{
+            "filename": "/var/log/api/scc.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "scc"
+        },
+        "utils_handler":{
+            "filename": "/var/log/api/utils.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "utils"
+        },
+        "sys_django_handler":{
+            "address": "/dev/log",
+            "class": "logging.handlers.SysLogHandler",
+            "level": "DEBUG",
+            "facility": "local6",
+            "formatter": "utils"
+        }
+    },
+    "root": {
+        "level": "INFO",
+        "handlers": ["sys_django_handler"]
+    },
+    "loggers": {
+        "dal": {
+            "handlers": ["dal_handler"],
+            "level": "DEBUG"
+        },
+        "probe": {
+            "handlers": ["probe_handler"],
+            "level": "DEBUG"
+        },
+        "scc": {
+            "handlers": ["scc_handler"],
+            "level": "DEBUG"
+        },
+        "utils": {
+            "handlers": ["utils_handler"],
+            "level": "DEBUG"
+        }
+    }
+}
