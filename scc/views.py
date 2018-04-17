@@ -1,4 +1,5 @@
 import json
+import logging
 from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
@@ -12,9 +13,9 @@ from BLL.scc import Scc as SccBLL
 #                                                                     #
 #######################################################################
 class Scc:
-    """
-    List all events, or create a new event.
-    """
+    def __init__(self):
+        self.logger = logging.getLogger("scc")
+
     @csrf_exempt
     def routing(self, request):
         if request.method  == "POST":
@@ -23,24 +24,26 @@ class Scc:
     @csrf_exempt
     def post(self, data):
         json_data = json.loads(json.dumps(data))
-        scc = SccBLL()
-        rsp = scc.post(json_data)
-        return rsp.json()
+        # scc = SccBLL()
+        # rsp = scc.post(json_data)
+        # self.logger.debug("status: %d, message: %s"%(0, str(rsp.json())))
+        # return rsp.json()
 
     @csrf_exempt
     def http_post(self, request):
         try:
             json_data = json.loads(request.body)
         except Exception as e:
-            print e
+            self.logger.error("status: %d, message: %s"%(1, str(e)))
             return HttpResponse(status=400)
         try:
             json_data['AlertStatus']
         except Exception as e:
+            self.logger.warning("status: %d, message: try json dump again, %s"%(1, str(e)))
             json_data = json.loads(json_data)
         scc = SccBLL()
         rsp = scc.post(json_data)
-        print rsp.json()
+        self.logger.debug("status: %d, message: %s"%(0, str(rsp.json())))
         data = json.dumps(rsp.json())
         return HttpResponse(data, content_type='application/json', status=202)
 

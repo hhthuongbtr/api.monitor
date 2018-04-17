@@ -1,25 +1,30 @@
-from MySQL_Database import Database
 import json
+import logging
+from MySQL_Database import Database
 
 class ProfileAgent:
     def __init__(self):
         self.db = Database()
+        self.logger = logging.getLogger("probe")
     """
     Monitor list
     """
     def convert_profile_agent_monitor_list_to_array(self, data_table):
         args = []
         for profile_agent in data_table:
-            args.append({ 
-                            'id'            : profile_agent[0] if profile_agent[0] else None,
-                            'ip'            : profile_agent[1] if profile_agent[1] else "",
-                            'protocol'      : profile_agent[2] if profile_agent[2] else 'udp',
-                            'status'        : profile_agent[3] if profile_agent[3] else 0,
-                            'agent'         : profile_agent[4] if profile_agent[4] else "",
-                            'thread'        : profile_agent[5] if profile_agent[5] else 10,
-                            'name'          : profile_agent[6] if profile_agent[6] else "",
-                            'type'          : profile_agent[7] if profile_agent[7] else None
-                        })
+            try:
+                args.append({ 
+                                'id'            : profile_agent[0] if profile_agent[0] else None,
+                                'ip'            : profile_agent[1] if profile_agent[1] else "",
+                                'protocol'      : profile_agent[2] if profile_agent[2] else 'udp',
+                                'status'        : profile_agent[3] if profile_agent[3] else 0,
+                                'agent'         : profile_agent[4] if profile_agent[4] else "",
+                                'thread'        : profile_agent[5] if profile_agent[5] else 10,
+                                'name'          : profile_agent[6] if profile_agent[6] else "",
+                                'type'          : profile_agent[7] if profile_agent[7] else None
+                            })
+            except Exception as e:
+                self.logger.error("error: %d, message: %s"%(1, str(e)))
         return args
 
     def get_profile_agent_monitor_list(self, ip):
@@ -34,10 +39,12 @@ class ProfileAgent:
             http_status_code = 500
             message = message
             data = None
+            self.logger.error("ststus: %d, message: %s"%(http_status_code, message))
         if status == 0:
             http_status_code = 200
             message = message
             data = self.convert_profile_agent_monitor_list_to_array(data_table)
+            self.logger.debug("ststus: %s, message: total %d"%(http_status_code, len(data)))
         json_response = {"status": http_status_code, "message": message, "data": data}
         json_response = json.dumps(json_response)
         json_response = json.loads(json_response)
@@ -49,17 +56,20 @@ class ProfileAgent:
     def convert_profile_agent_snmp_list_to_array(self, data_table):
         args = []
         for profile_agent in data_table:
-            args.append({ 
-                            'id'                     : profile_agent[0] if profile_agent[0] else None,
-                            'name'                   : profile_agent[1] if profile_agent[1] else "",
-                            'ip'                     : profile_agent[2] if profile_agent[2] else "",
-                            'type'                   : profile_agent[3] if profile_agent[3] else "",
-                            'monitor'                : profile_agent[4] if profile_agent[4] else 0,
-                            'status'                 : profile_agent[5] if profile_agent[5] else 0,
-                            'analyzer'               : profile_agent[6] if profile_agent[6] else 0,
-                            'analyzer_status'        : profile_agent[7] if profile_agent[7] else 0,
-                            "video_status"           : profile_agent[8] if profile_agent[8] else 0
-                        })
+            try:
+                args.append({ 
+                                'id'                     : profile_agent[0] if profile_agent[0] else None,
+                                'name'                   : profile_agent[1] if profile_agent[1] else "",
+                                'ip'                     : profile_agent[2] if profile_agent[2] else "",
+                                'type'                   : profile_agent[3] if profile_agent[3] else "",
+                                'monitor'                : profile_agent[4] if profile_agent[4] else 0,
+                                'status'                 : profile_agent[5] if profile_agent[5] else 0,
+                                'analyzer'               : profile_agent[6] if profile_agent[6] else 0,
+                                'analyzer_status'        : profile_agent[7] if profile_agent[7] else 0,
+                                "video_status"           : profile_agent[8] if profile_agent[8] else 0
+                            })
+            except Exception as e:
+                self.logger.error("error: %d, message: %s"%(1, str(e)))
         return args
 
     def get_profile_agent_snmp_list(self, ip):
@@ -71,10 +81,12 @@ class ProfileAgent:
             http_status_code = 500
             message = message
             data = None
+            self.logger.error("ststus: %d, message: %s"%(http_status_code, message))
         if status == 0:
             http_status_code = 200
             message = message
             data = self.convert_profile_agent_snmp_list_to_array(data_table)
+            self.logger.debug("ststus: %s, message: total %d"%(http_status_code, len(data)))
         json_response = {"status": http_status_code, "message": message, "data": data}
         json_response = json.dumps(json_response)
         json_response = json.loads(json_response)
@@ -86,18 +98,21 @@ class ProfileAgent:
     def convert_profile_agent_check_video_list_to_array(self, data_table):
         args = []
         for profile_agent in data_table:
-            args.append({ 
-                            "id"                : profile_agent[0] if profile_agent[0] else None,
-                            "ip"                : profile_agent[1] if profile_agent[1] else "",
-                            "protocol"          : profile_agent[2] if profile_agent[2] else "udp",
-                            "status"            : profile_agent[3] if profile_agent[3] else 0,
-                            "thread"            : profile_agent[4] if profile_agent[4] else 10,
-                            "name"              : profile_agent[5] if profile_agent[5] else "Unknow",
-                            "agent"             : profile_agent[6] if profile_agent[6] else "Unknow",
-                            "type"              : profile_agent[7] if profile_agent[7] else "",
-                            "video_status"      : profile_agent[8] if profile_agent[8] else 0
+            try:
+                args.append({ 
+                                "id"                : profile_agent[0] if profile_agent[0] else None,
+                                "ip"                : profile_agent[1] if profile_agent[1] else "",
+                                "protocol"          : profile_agent[2] if profile_agent[2] else "udp",
+                                "status"            : profile_agent[3] if profile_agent[3] else 0,
+                                "thread"            : profile_agent[4] if profile_agent[4] else 10,
+                                "name"              : profile_agent[5] if profile_agent[5] else "Unknow",
+                                "agent"             : profile_agent[6] if profile_agent[6] else "Unknow",
+                                "type"              : profile_agent[7] if profile_agent[7] else "",
+                                "video_status"      : profile_agent[8] if profile_agent[8] else 0
 
-                        })
+                            })
+            except Exception as e:
+                self.logger.error("error: %d, message: %s"%(1, str(e)))
         return args
 
     def get_profile_agent_check_video_list(self, ip):
@@ -109,10 +124,12 @@ class ProfileAgent:
             http_status_code = 500
             message = message
             data = None
+            self.logger.error("ststus: %d, message: %s"%(http_status_code, message))
         if status == 0:
             http_status_code = 200
             message = message
             data = self.convert_profile_agent_check_video_list_to_array(data_table)
+            self.logger.debug("ststus: %s, message: total %d"%(http_status_code, len(data)))
         json_response = {"status": http_status_code, "message": message, "data": data}
         json_response = json.dumps(json_response)
         json_response = json.loads(json_response)
@@ -124,13 +141,17 @@ class ProfileAgent:
     def convert_profile_agent_first_check_anylazer_list_to_array(self, data_table):
         args = []
         for profile_agent in data_table:
-            args.append({
-                            'id'            : profile_agent[0] if profile_agent[0] else None,
-                            'ip'            : profile_agent[1] if profile_agent[1] else "",
-                            'agent_ip'      : profile_agent[2] if profile_agent[2] else "",
-                            'dropframe'     : profile_agent[3] if profile_agent[3] else 0,
-                            'discontinuity' : profile_agent[4] if profile_agent[4] else 0
-                        })
+            try:
+                args.append({
+                                'id'            : profile_agent[0] if profile_agent[0] else None,
+                                'ip'            : profile_agent[1] if profile_agent[1] else "",
+                                'agent_ip'      : profile_agent[2] if profile_agent[2] else "",
+                                'dropframe'     : profile_agent[3] if profile_agent[3] else 0,
+                                'discontinuity' : profile_agent[4] if profile_agent[4] else 0
+                            })
+            except Exception as e:
+                self.logger.error("error: %d, message: %s"%(1, str(e)))
+
         return args
 
     def get_profile_agent_first_check_anylazer_list(self):
@@ -142,10 +163,12 @@ class ProfileAgent:
             http_status_code = 500
             message = message
             data = None
+            self.logger.error("ststus: %d, message: %s"%(http_status_code, message))
         if status == 0:
             http_status_code = 200
             message = message
             data = self.convert_profile_agent_first_check_anylazer_list_to_array(data_table)
+            self.logger.debug("ststus: %s, message: total %d"%(http_status_code, len(data)))
         json_response = {"status": http_status_code, "message": message, "data": data}
         json_response = json.dumps(json_response)
         json_response = json.loads(json_response)
@@ -157,7 +180,8 @@ class ProfileAgent:
     def convert_profile_agent_last_check_analyzer_list_to_array(self, data_table):
         args = []
         for profile_agent in data_table:
-            args.append({
+            try:
+                args.append({
                             'id'                     : profile_agent[0] if profile_agent[0] else None,
                             'ip'                     : profile_agent[1] if profile_agent[1] else "",
                             'agent_ip'               : profile_agent[2] if profile_agent[2] else "",
@@ -167,6 +191,8 @@ class ProfileAgent:
                             'discontinuity'          : profile_agent[6] if profile_agent[6] else 0,
                             'discontinuity_threshold': profile_agent[7] if profile_agent[7] else 0,
                         })
+            except Exception as e:
+                self.logger.error("error: %d, message: %s"%(1, str(e)))
         return args
 
     def get_profile_agent_last_check_analyzer_list(self):
@@ -178,10 +204,12 @@ class ProfileAgent:
             http_status_code = 500
             message = message
             data = None
+            self.logger.error("ststus: %d, message: %s"%(http_status_code, message))
         if status == 0:
             http_status_code = 200
             message = message
             data = self.convert_profile_agent_last_check_analyzer_list_to_array(data_table)
+            self.logger.debug("ststus: %s, message: total %d"%(http_status_code, len(data)))
         json_response = {"status": http_status_code, "message": message, "data": data}
         json_response = json.dumps(json_response)
         json_response = json.loads(json_response)

@@ -1,4 +1,5 @@
 import time
+import logging
 from BLL.agent import ProfileAgent
 from setting.settings import SYSTEM
 from DateTime import DateTime
@@ -13,6 +14,7 @@ UNKNOWN = 3
 class Snmp:
     def __init__(self, host):
         self.host = host
+        self.logger = logging.getLogger("utils")
 
     def get_profile_agent_list(self):
         snmp = ProfileAgent()
@@ -55,6 +57,7 @@ class Snmp:
 
                     error_message_list.append(error_message)
                 count += 1
+        self.logger.info("alarm - %s - %s"%(self.host, str(error_message_list)))
         if status == OK:
             message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
         elif status == CRITICAL:
@@ -93,6 +96,7 @@ class Snmp:
 
                     error_message_list.append(error_message)
                 count += 1
+        self.logger.info("alarm-video - %s - %s"%(self.host, str(error_message_list)))
         if status == OK:
             message = """AGENT : %d kenh OK, %d kenh ERROR """%(count - channel_error_num, channel_error_num)
         elif status == CRITICAL:
@@ -110,10 +114,12 @@ class Snmp:
             message = data["message"]
             status = WARNING
             error_message = ""
+            self.logger.warning("status: %d message: %s"%(status, "Empty"))
         elif len(data["data"]) == 0:
             status = WARNING
             message = " AGENT : NOT GET INFORMATION "
             error_message = ""
+            self.logger.info("status: %d message: %s"%(status, "Empty"))
         else:
             profile_agent_list = data["data"]
             date_time = DateTime()
