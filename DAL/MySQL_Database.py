@@ -35,7 +35,7 @@ class Database:
             status = 1
             message = "No query"
             data = None
-            self.logger.warning("ststus: %d, message: %s"%(status, message))
+            self.logger.debug("ststus: %d, message: %s"%(status, message))
             return status, message, data
         try:
             session = self.connect()
@@ -46,9 +46,10 @@ class Database:
             status = 0
             message = "Ok"
             data = None
-            self.logger.warning("ststus: %d, message: %s"%(status, message))
+            self.logger.debug("ststus: %d, message: %s"%(status, message))
             return status, message, data
         except Exception as e:
+            self.close_connect(session)
             status = 1
             message = str(e)
             data = None
@@ -61,7 +62,7 @@ class Database:
             status = 1
             message = "No query"
             data = None
-            self.logger.warning("ststus: %d, message: %s"%(status, message))
+            self.logger.debug("ststus: %d, message: %s"%(status, message))
             return status, message, data
         try:
             session = self.connect()
@@ -72,9 +73,10 @@ class Database:
             status = 0
             message = "Ok"
             data = data_table
-            self.logger.warning("ststus: %d, message: %s total %d"%(status, message, len(data_table)))
+            self.logger.debug("ststus: %d, message: %s total %d"%(status, message, len(data_table)))
             return status, message, data
         except Exception as e:
+            self.close_connect(session)
             status = 1
             message = str(e)
             data = None
