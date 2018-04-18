@@ -3,16 +3,16 @@
     "disable_existing_loggers": false,
     "formatters":{ 
         "dal": {
-            "format": "dal: date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
+            "format": "date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
         },
         "probe":{
-            "format":"probe: date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
+            "format":"date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
         },
         "scc":{
-            "format":"scc: date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
+            "format":"date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
         },
         "utils":{
-            "format":"utils: date: %(asctime)s - %(name)s - module: %(name)s - serverity: %(levelname)s - message: %(message)s"
+            "format":"date: %(asctime)s - %(name)s - module: %(name)s - serverity: %(levelname)s - message: %(message)s"
         }
     },
     "handlers": {

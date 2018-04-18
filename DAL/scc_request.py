@@ -13,7 +13,7 @@ class ApiRequest:
         }
 
     def get(self):
-        self.logger.info("message: Data post contain: %s"%(str(data)))
+        self.logger.warning("message: Data post contain: %s"%(str(data)))
         try:
             rsp = requests.get(self.url, data=data, headers=self.headers, timeout=5)
             self.logger.critical("status: %d, message: %s"%(0, str(rsp.json())))
@@ -23,7 +23,7 @@ class ApiRequest:
         return rsp 
 
     def put(self, data):
-        self.logger.info("message: Data post contain: %s"%(str(data)))
+        self.logger.warning("message: Data post contain: %s"%(str(data)))
         try:
             rsp = requests.put(self.url, data=data, headers=self.headers, timeout=5)
             self.logger.critical("status: %d, message: %s"%(0, str(rsp.json())))
@@ -33,7 +33,7 @@ class ApiRequest:
         return rsp  
 
     def post(self, data):
-        self.logger.info("message: Data post contain: %s"%(str(data)))
+        self.logger.warning("message: Data post contain: %s"%(str(data)))
         try:
             rsp = requests.post(self.url, data=data, headers=self.headers, timeout=5)
             self.logger.critical("status: %d, message: %s"%(0, str(rsp.json())))
