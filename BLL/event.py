@@ -1,4 +1,4 @@
-from DAL.event import Event as EventDAL
+from DAL import Event as EventDAL
 
 class Event():
     def __init__(self):

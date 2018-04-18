@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-from BLL.scc import Scc as SccBLL
+from BLL import Scc as SccBLL
 
 
 #######################################################################
@@ -24,10 +24,10 @@ class Scc:
     @csrf_exempt
     def post(self, data):
         json_data = json.loads(json.dumps(data))
-        # scc = SccBLL()
-        # rsp = scc.post(json_data)
-        # self.logger.debug("status: %d, message: %s"%(0, str(rsp.json())))
-        # return rsp.json()
+        scc = SccBLL()
+        rsp = scc.post(json_data)
+        self.logger.debug("status: %d, message: %s"%(0, str(rsp)))
+        return rsp.json()
 
     @csrf_exempt
     def http_post(self, request):

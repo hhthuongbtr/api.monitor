@@ -2,15 +2,13 @@ import logging
 import time, json
 from agent.models import *
 from rest_framework import status
-from utils.rabbitmq_queue import *
 from rest_framework.response import Response
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
-from scc.views import Scc
-from utils.check_iptv import Snmp
-from utils.DateTime import DateTime
-from BLL.agent import ProfileAgent as ProfileAgentBLL
+from scc import Scc
+from BLL import ProfileAgent as ProfileAgentBLL
+from utils import RabbitMQQueue, Snmp, DateTime
 from setting.settings import PUSH_ALARM_CORE, PUSH_ALARM_PROBE
 
 
@@ -106,7 +104,7 @@ class AgentDetail:
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
             querry = "update agent set cpu=%s,mem=%s,disk=%s,last_update=unix_timestamp() where ip='%s';"%(data['cpu'],data['mem'],data['disk'],ip)
             RabbitMQQueue().push_query(querry)
-            self.logger.info("message: update dropframe added to RabbitMQQueue: %s"%(querry))
+            self.logger.info("message: update performance added to RabbitMQQueue: %s"%(querry))
             return HttpResponse(status=202)
         return HttpResponse(status=400)
 

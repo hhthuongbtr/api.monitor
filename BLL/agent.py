@@ -1,4 +1,4 @@
-from DAL.agent import ProfileAgent as ProfileAgentDAL
+from DAL import ProfileAgent as ProfileAgentDAL
 
 class ProfileAgent:
     def __init__(self):
