@@ -1,4 +1,5 @@
 import time
+import json
 import logging
 from BLL.agent import ProfileAgent
 from setting.settings import SYSTEM
@@ -132,7 +133,7 @@ class Snmp:
         alarm_status = self.get_human_readable_status(status)
         msg = {
                     "Message": message, 
-                    "Data": error_message_list, 
+                    "Data": json.dumps(error_message_list), 
                     "ProcessingTime": "Time to query " + str(round(time.time() - start_time)) + " seconds."
         }
         return alarm_status, msg
