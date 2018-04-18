@@ -262,7 +262,7 @@ class ProfileAgentDetail:
                         "ishost"            : False,
                         "queueServiceName"  : "Check_Agent_IPTV_Status",
                         "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
+                        "msg"               : json.dumps(msg),
                         "AlertStatus"       : alarm_status
                     }
                     self.logger.debug("alarm contain: %s"%(str(data)))
@@ -280,7 +280,7 @@ class ProfileAgentDetail:
                         "ishost"            : False,
                         "queueServiceName"  : "Check_Agent_IPTV_Status",
                         "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
+                        "msg"               : json.dumps(msg),
                         "AlertStatus"       : alarm_status
                     }
                     self.logger.debug("alarm contain: %s"%(str(data)))
@@ -317,7 +317,7 @@ class ProfileAgentDetail:
                         "ishost"            : False,
                         "queueServiceName"  : "Check_Agent_IPTV_Status",
                         "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
+                        "msg"               : json.dumps(msg),
                         "AlertStatus"       : alarm_status
                     }
                     self.logger.debug("alarm contain: %s"%(str(data)))
@@ -335,7 +335,7 @@ class ProfileAgentDetail:
                         "ishost"            : False,
                         "queueServiceName"  : "Check_Agent_IPTV_Status",
                         "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
+                        "msg"               : json.dumps(msg),
                         "AlertStatus"       : alarm_status
                     }
                     self.logger.debug("alarm contain: %s"%(str(data)))
