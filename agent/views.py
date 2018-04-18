@@ -100,7 +100,7 @@ class AgentDetail:
 
     @csrf_exempt
     def put(self, request, ip):
-        self.logger.debug("message: profile id %s not exist"%(str(ip)))
+        self.logger.debug("message: Agent IP :%s"%(str(ip)))
         data = request.body
         data = json.loads(data)
         if len(data)==3 and('cpu' and 'mem' and 'disk' in data):
