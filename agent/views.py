@@ -247,46 +247,50 @@ class ProfileAgentDetail:
             date_time = DateTime()
             if not profile_agent:
                 return HttpResponse(status=400)
-            profile_agent.status = data["status"]
-            profile_agent.last_update = date_time.get_now()
-            profile_agent.save()
-            self.logger.debug("message: update status --> success")
-            if "Origin" in agent_name or "4500" in agent_name or "ott" in agent_name:
-                self.logger.info("%s is core probe"%(agent_name))
-                if PUSH_ALARM_CORE:
-                    self.logger.info("Push alarm to scc is active")
-                    time.sleep(0.5)
-                    snmp = Snmp(str(data["ip"]).replace(' ', ''))
-                    alarm_status, msg = snmp.check_agent()
-                    data = {
-                        "ishost"            : False,
-                        "queueServiceName"  : "Check_Agent_IPTV_Status",
-                        "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
-                        "AlertStatus"       : alarm_status
-                    }
-                    self.logger.debug("alarm contain: %s"%(str(data)))
-                    scc = Scc()
-                    scc.post(data)
-                return HttpResponse(status=202)
+            if profile_agent.status != data["status"]
+                profile_agent.status = data["status"]
+                profile_agent.last_update = date_time.get_now()
+                profile_agent.save()
+                self.logger.debug("message: update status --> success")
+                if "Origin" in agent_name or "4500" in agent_name or "ott" in agent_name:
+                    self.logger.info("%s is core probe"%(agent_name))
+                    if PUSH_ALARM_CORE:
+                        self.logger.info("Push alarm to scc is active")
+                        time.sleep(0.5)
+                        snmp = Snmp(str(data["ip"]).replace(' ', ''))
+                        alarm_status, msg = snmp.check_agent()
+                        data = {
+                            "ishost"            : False,
+                            "queueServiceName"  : "Check_Agent_IPTV_Status",
+                            "queueHost"         : agent_name, 
+                            "msg"               : str(msg),
+                            "AlertStatus"       : alarm_status
+                        }
+                        self.logger.debug("alarm contain: %s"%(str(data)))
+                        scc = Scc()
+                        scc.post(data)
+                    return HttpResponse(status=202)
+                else:
+                    self.logger.info("%s is not core probe"%(agent_name))
+                    if PUSH_ALARM_PROBE:
+                        self.logger.info("Push alarm to scc is active")
+                        time.sleep(0.5)
+                        snmp = Snmp(str(data["ip"]).replace(' ', ''))
+                        alarm_status, msg = snmp.check_agent()
+                        data = {
+                            "ishost"            : False,
+                            "queueServiceName"  : "Check_Agent_IPTV_Status",
+                            "queueHost"         : agent_name, 
+                            "msg"               : str(msg),
+                            "AlertStatus"       : alarm_status
+                        }
+                        self.logger.debug("alarm contain: %s"%(str(data)))
+                        scc = Scc()
+                        scc.post(data)
+                    return HttpResponse(status=202)
             else:
-                self.logger.info("%s is not core probe"%(agent_name))
-                if PUSH_ALARM_PROBE:
-                    self.logger.info("Push alarm to scc is active")
-                    time.sleep(0.5)
-                    snmp = Snmp(str(data["ip"]).replace(' ', ''))
-                    alarm_status, msg = snmp.check_agent()
-                    data = {
-                        "ishost"            : False,
-                        "queueServiceName"  : "Check_Agent_IPTV_Status",
-                        "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
-                        "AlertStatus"       : alarm_status
-                    }
-                    self.logger.debug("alarm contain: %s"%(str(data)))
-                    scc = Scc()
-                    scc.post(data)
-                return HttpResponse(status=202)
+                self.logger.warning("Value not change: %s"%(str(pk)))
+                return HttpResponse(status=400)
                 # querry = "update profile_agent set status=%s,last_update=unix_timestamp() where id=%s;"%(data['status'],pk)
                 # RabbitMQQueue().push_query(querry)
                 # return HttpResponse(status=202)
@@ -299,49 +303,53 @@ class ProfileAgentDetail:
             if not profile_agent:
                 self.logger.warning("message: profile id %s not exist"%(str(pk)))
                 return HttpResponse(status=400)
-            profile_agent.video = data["video"]
-            profile_agent.last_update = date_time.get_now()
-            profile_agent.save()
-            self.logger.debug("message: update video status --> success")
-            if "Origin" in agent_name or "4500" in agent_name or "ott" in agent_name:
-                """
-                Push to SCC
-                """
-                self.logger.info("%s is core probe"%(agent_name))
-                if PUSH_ALARM_CORE:
-                    self.logger.info("Push alarm to scc is active")
-                    time.sleep(0.5)
-                    snmp = Snmp(str(data["ip"]).replace(' ', ''))
-                    alarm_status, msg = snmp.check_agent()
-                    data = {
-                        "ishost"            : False,
-                        "queueServiceName"  : "Check_Agent_IPTV_Status",
-                        "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
-                        "AlertStatus"       : alarm_status
-                    }
-                    self.logger.debug("alarm contain: %s"%(str(data)))
-                    scc = Scc()
-                    scc.post(data)
-                return HttpResponse(status=202)
+            if profile_agent.video != data["video"]
+                profile_agent.video = data["video"]
+                profile_agent.last_update = date_time.get_now()
+                profile_agent.save()
+                self.logger.debug("message: update video status --> success")
+                if "Origin" in agent_name or "4500" in agent_name or "ott" in agent_name:
+                    """
+                    Push to SCC
+                    """
+                    self.logger.info("%s is core probe"%(agent_name))
+                    if PUSH_ALARM_CORE:
+                        self.logger.info("Push alarm to scc is active")
+                        time.sleep(0.5)
+                        snmp = Snmp(str(data["ip"]).replace(' ', ''))
+                        alarm_status, msg = snmp.check_agent()
+                        data = {
+                            "ishost"            : False,
+                            "queueServiceName"  : "Check_Agent_IPTV_Status",
+                            "queueHost"         : agent_name, 
+                            "msg"               : str(msg),
+                            "AlertStatus"       : alarm_status
+                        }
+                        self.logger.debug("alarm contain: %s"%(str(data)))
+                        scc = Scc()
+                        scc.post(data)
+                    return HttpResponse(status=202)
+                else:
+                    self.logger.info("%s is not core probe"%(agent_name))
+                    if PUSH_ALARM_PROBE:
+                        self.logger.info("Push alarm to scc is active")
+                        time.sleep(0.5)
+                        snmp = Snmp(str(data["ip"]).replace(' ', ''))
+                        alarm_status, msg = snmp.check_agent()
+                        data = {
+                            "ishost"            : False,
+                            "queueServiceName"  : "Check_Agent_IPTV_Status",
+                            "queueHost"         : agent_name, 
+                            "msg"               : str(msg),
+                            "AlertStatus"       : alarm_status
+                        }
+                        self.logger.debug("alarm contain: %s"%(str(data)))
+                        scc = Scc()
+                        scc.post(data)
+                    return HttpResponse(status=202)
             else:
-                self.logger.info("%s is not core probe"%(agent_name))
-                if PUSH_ALARM_PROBE:
-                    self.logger.info("Push alarm to scc is active")
-                    time.sleep(0.5)
-                    snmp = Snmp(str(data["ip"]).replace(' ', ''))
-                    alarm_status, msg = snmp.check_agent()
-                    data = {
-                        "ishost"            : False,
-                        "queueServiceName"  : "Check_Agent_IPTV_Status",
-                        "queueHost"         : agent_name, 
-                        "msg"               : str(msg),
-                        "AlertStatus"       : alarm_status
-                    }
-                    self.logger.debug("alarm contain: %s"%(str(data)))
-                    scc = Scc()
-                    scc.post(data)
-                return HttpResponse(status=202)
+                self.logger.warning("Value not change: %s"%(str(pk)))
+                return HttpResponse(status=400)
                 # querry="update profile_agent set video=%s,last_update=unix_timestamp() where id=%s;"%(data['video'],pk)
                 # RabbitMQQueue().push_query(querry)
                 # return HttpResponse(status=202)
