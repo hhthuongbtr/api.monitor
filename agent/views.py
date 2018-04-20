@@ -247,7 +247,7 @@ class ProfileAgentDetail:
             date_time = DateTime()
             if not profile_agent:
                 return HttpResponse(status=400)
-            if profile_agent.status != data["status"]
+            if profile_agent.status != data["status"]:
                 profile_agent.status = data["status"]
                 profile_agent.last_update = date_time.get_now()
                 profile_agent.save()
@@ -303,7 +303,7 @@ class ProfileAgentDetail:
             if not profile_agent:
                 self.logger.warning("message: profile id %s not exist"%(str(pk)))
                 return HttpResponse(status=400)
-            if profile_agent.video != data["video"]
+            if profile_agent.video != data["video"]:
                 profile_agent.video = data["video"]
                 profile_agent.last_update = date_time.get_now()
                 profile_agent.save()
