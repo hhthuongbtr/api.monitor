@@ -7,6 +7,8 @@ class ProfileAgent:
     def get_profile_agent_monitor_list(self, ip):
         return self.pa.get_profile_agent_monitor_list(ip)
 
+    def get_profile_agent_monitor_list_by_source_ip_multicast(ip, source):
+        return self.pa.get_profile_agent_monitor_list_by_source_ip_multicast(ip, source)
     def get_profile_agent_snmp_list(self, ip):
         return self.pa.get_profile_agent_snmp_list(ip)
 

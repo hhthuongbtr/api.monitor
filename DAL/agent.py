@@ -50,6 +50,29 @@ class ProfileAgent:
         json_response = json.loads(json_response)
         return json_response
 
+    def get_profile_agent_monitor_list_by_source_ip_multicast(self, ip, source):
+        http_status_code = 500
+        message = "Unknow"
+        data = None
+        sql = """select pa.id, p.ip, p.protocol, pa.status, a.name as agent, a.thread, c.name, p.type
+            from profile as p, agent as a, profile_agent as pa,channel as c 
+            where p.ip LIKE '%s%' a.ip='%s' and a.active=1 and pa.monitor=1 and p.channel_id=c.id and pa.profile_id=p.id and pa.agent_id=a.id"""%(source,ip)
+        status, message, data_table = self.db.execute_query(sql)
+        if status == 1:
+            http_status_code = 500
+            message = message
+            data = None
+            self.logger.error("ststus: %d, message: %s"%(http_status_code, message))
+        if status == 0:
+            http_status_code = 200
+            message = message
+            data = self.convert_profile_agent_monitor_list_to_array(data_table)
+            self.logger.debug("ststus: %s, message: total %d"%(http_status_code, len(data)))
+        json_response = {"status": http_status_code, "message": message, "data": data}
+        json_response = json.dumps(json_response)
+        json_response = json.loads(json_response)
+        return json_response
+
     """
     Snmp list
     """

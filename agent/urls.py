@@ -6,6 +6,7 @@ from agent.views import *
 urlpatterns = [
     url(r'^agent/$', views.AgentList().routing),
     url(r'^agent/(?P<ip>(([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5])\.){3}([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5]))/$', views.AgentDetail().routing),
+    url(r'^agent/(?P<ip>(([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5])\.){3}([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5]))/(?P<source>(([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5])\.){3}([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5]))/$', ProfileAgentList().get_profile_agent_monitor_list_by_source_ip_multicast),
     url(r'^profile_agent/$', views.ProfileAgentList().routing),
     url(r'^profile_agent/(?P<pk>[0-9]+)/$', views.ProfileAgentDetail().routing),
     url(r'^profile_agent/(?P<ip>(([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5])\.){3}([01]?[0-9]?[0-9]|2[0-4][0-9]|2[5][0-5]))/$', ProfileAgentList().get_profile_agent_monitor_list),

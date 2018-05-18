@@ -194,6 +194,12 @@ class ProfileAgentList:
         json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
         return HttpResponse(json_data, content_type='application/json', status=200)
 
+    @csrf_exempt
+    def get_profile_agent_last_check_analyzer_list(self, request, ip, source):
+        pa = ProfileAgentBLL()
+        data = pa.get_profile_agent_monitor_list_by_source_ip_multicast(ip, source)
+        json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
+        return HttpResponse(json_data, content_type='application/json', status=200)
 
 class ProfileAgentDetail:
     """
