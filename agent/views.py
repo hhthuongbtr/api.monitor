@@ -196,8 +196,6 @@ class ProfileAgentList:
 
     @csrf_exempt
     def get_profile_agent_monitor_list_by_source_ip_multicast(self, request, ip, source):
-        print ip
-        print source
         pa = ProfileAgentBLL()
         data = pa.get_profile_agent_monitor_list_by_source_ip_multicast(ip, source)
         json_data = json.dumps({"data": data['data'], "message": data['message'], "status": 200})
@@ -254,6 +252,7 @@ class ProfileAgentDetail:
             profile_agent = self.get_object(pk)
             date_time = DateTime()
             if not profile_agent:
+                self.logger.infor("Not found profile_agent_id: %s"%(str(pk)))
                 return HttpResponse(status=400)
             if profile_agent.status != data["status"]:
                 profile_agent.status = data["status"]

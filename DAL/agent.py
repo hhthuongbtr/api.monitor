@@ -56,7 +56,7 @@ class ProfileAgent:
         data = None
         sql = """select pa.id, p.ip, p.protocol, pa.status, a.name as agent, a.thread, c.name, p.type
             from profile as p, agent as a, profile_agent as pa,channel as c 
-            where p.ip LIKE '%s%%' and a.ip='%s' and a.active=1 and pa.monitor=1 and p.channel_id=c.id and pa.profile_id=p.id and pa.agent_id=a.id"""%(source,ip)
+            where p.ip LIKE '%s%%:' and a.ip='%s' and a.active=1 and pa.monitor=1 and p.channel_id=c.id and pa.profile_id=p.id and pa.agent_id=a.id"""%(source,ip)
         status, message, data_table = self.db.execute_query(sql)
         if status == 1:
             http_status_code = 500
