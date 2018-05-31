@@ -252,7 +252,7 @@ class ProfileAgentDetail:
             profile_agent = self.get_object(pk)
             date_time = DateTime()
             if not profile_agent:
-                self.logger.infor("Not found profile_agent_id: %s"%(str(pk)))
+                self.logger.info("Not found profile_agent_id: %s"%(str(pk)))
                 return HttpResponse(status=400)
             if profile_agent.status != data["status"]:
                 profile_agent.status = data["status"]
