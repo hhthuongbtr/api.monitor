@@ -61,6 +61,10 @@ class Scc:
                 AlertStatus = json_data['AlertStatus']
             else:
                 AlertStatus = None
+            if "AlertType" in json_data:
+                AlertType = json_data['AlertType']
+            else:
+                AlertType = "Exception"
 
             data = [{
                         "queueBegin" : queueBegin,
@@ -74,7 +78,8 @@ class Scc:
                         "queueHost" : queueHost,
                         "incidentTicketID" : incidentTicketID,
                         "msg" : msg,
-                        "AlertStatus" : AlertStatus
+                        "AlertStatus" : AlertStatus,
+                        "AlertType" : AlertType
                     }]
             data = json.dumps(data)
             rsp = self.scc_api.post(data)
