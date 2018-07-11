@@ -23,7 +23,7 @@ class Snmp:
         return data
 
     def get_human_readable_status(self, status):
-        alarm_status = {0: "OK", 1: "WARNING", 2: "CRITICAL", 3: "UNKNOWN"} [status]
+        alarm_status = {0: "ok", 1: "warning", 2: "critical", 3: "unknow"} [status]
         return alarm_status
 
     def _get_alarm(self, profile_agent_list):
