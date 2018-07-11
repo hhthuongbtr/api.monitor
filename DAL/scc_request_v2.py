@@ -36,11 +36,11 @@ class ApiRequest:
         return rsp  
 
     def post(self, data):
-        # try:
+        try:
             rsp = requests.post(self.url, data=data, headers=self.headers, timeout=5)
             self.logger.critical("status: %d, message: %s"%(0, str(rsp.json())))
             print rsp.text
-        # except ConnectionError as e:
+        except ConnectionError as e:
             self.logger.error("status: %d, message: %s"%(1, str(e)))
             return None
-        # return rsp  text
+        return rsp.text

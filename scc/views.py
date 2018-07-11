@@ -3,7 +3,6 @@ import logging
 from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
 from BLL import Scc as SccBLL
 
 
