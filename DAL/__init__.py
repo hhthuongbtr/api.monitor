@@ -4,7 +4,7 @@ import logging.handlers
 import json
 # from config.config import LOGGING as logging_config_dict
 
-from .scc import Scc
+from .scc_v2 import Scc
 from .MySQL_Database import Database
 from .event import Event
 from .agent import ProfileAgent
