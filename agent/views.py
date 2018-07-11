@@ -271,7 +271,8 @@ class ProfileAgentDetail:
                             "queueServiceName"  : "Check_Agent_IPTV_Status",
                             "queueHost"         : agent_name, 
                             "msg"               : str(msg),
-                            "AlertStatus"       : alarm_status
+                            "AlertStatus"       : alarm_status,
+                            "agentId"           : int(pk)
                         }
                         self.logger.debug("alarm contain: %s"%(str(data)))
                         scc = Scc()
@@ -289,7 +290,8 @@ class ProfileAgentDetail:
                             "queueServiceName"  : "Check_Agent_IPTV_Status",
                             "queueHost"         : agent_name, 
                             "msg"               : str(msg),
-                            "AlertStatus"       : alarm_status
+                            "AlertStatus"       : alarm_status,
+                            "agentId"           : int(pk)
                         }
                         self.logger.debug("alarm contain: %s"%(str(data)))
                         scc = Scc()
@@ -330,7 +332,8 @@ class ProfileAgentDetail:
                             "queueServiceName"  : "Check_Agent_IPTV_Status",
                             "queueHost"         : agent_name, 
                             "msg"               : str(msg),
-                            "AlertStatus"       : alarm_status
+                            "AlertStatus"       : alarm_status,
+                            "agentId"           : int(pk)
                         }
                         self.logger.debug("alarm contain: %s"%(str(data)))
                         scc = Scc()
@@ -348,7 +351,8 @@ class ProfileAgentDetail:
                             "queueServiceName"  : "Check_Agent_IPTV_Status",
                             "queueHost"         : agent_name, 
                             "msg"               : str(msg),
-                            "AlertStatus"       : alarm_status
+                            "AlertStatus"       : alarm_status,
+                            "agentId"           : int(pk)
                         }
                         self.logger.debug("alarm contain: %s"%(str(data)))
                         scc = Scc()
