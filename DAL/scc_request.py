@@ -13,9 +13,9 @@ class ApiRequest:
         }
 
     def get(self):
-        self.logger.warning("message: Data post contain: %s"%(str(data)))
+        self.logger.warning("Get %s"%(self.url))
         try:
-            rsp = requests.get(self.url, data=data, headers=self.headers, timeout=5)
+            rsp = requests.get(self.url, headers=self.headers, timeout=5)
             self.logger.critical("status: %d, message: %s"%(0, str(rsp.json())))
         except ConnectionError as e:
             self.logger.error("status: %d, message: %s"%(1, str(e)))
