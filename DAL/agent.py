@@ -180,7 +180,7 @@ class ProfileAgent:
     def get_profile_agent_first_check_anylazer_list(self):
         sql = """select pa.id,p.ip,a.ip,dropframe,discontinuity 
             from profile_agent as pa, profile as p, agent as a 
-            where pa.analyzer=1 and a.active=1 and pa.profile_id=p.id and pa.agent_id=a.id"""
+            where (a.name like '%Origin%' or a.name like '%4500%') and pa.analyzer=1 and a.active=1 and pa.profile_id=p.id and pa.agent_id=a.id"""
         status, message, data_table = self.db.execute_query(sql)
         if status == 1:
             http_status_code = 500
@@ -221,7 +221,7 @@ class ProfileAgent:
     def get_profile_agent_last_check_analyzer_list(self):
         sql = """select pa.id, p.ip, a.ip, pa.analyzer_status, pa.dropframe, pa.dropframe_threshold, pa.discontinuity, pa.discontinuity_threshold 
             from profile_agent as pa, profile as p, agent as a 
-            where (pa.dropframe > 0 or pa.discontinuity > 0 or analyzer_status !=1) and a.active=1 and pa.analyzer=1 and pa.profile_id=p.id and pa.agent_id=a.id"""
+            where (a.name like '%Origin%' or a.name like '%4500%') and (pa.dropframe > 0 or pa.discontinuity > 0 or analyzer_status !=1) and a.active=1 and pa.analyzer=1 and pa.profile_id=p.id and pa.agent_id=a.id"""
         status, message, data_table = self.db.execute_query(sql)
         if status == 1:
             http_status_code = 500
